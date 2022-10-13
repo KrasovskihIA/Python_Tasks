@@ -1781,3 +1781,28 @@ result = {i: favorite_numbers[i] for i in favorite_numbers if int(favorite_numbe
 """
 months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
 result = {months[i]: i for i in months}
+
+
+
+"""
+В переменной s хранится строка пар число:слово. Дополните приведенный код, используя генератор, чтобы получить словарь result , в котором числа будут ключами, а слова – значениями.
+
+Примечание 1. Ключи словаря должны быть целыми числами (иметь тип int), значения – строками (иметь тип str).
+
+Примечание 2. Выводить содержимое словаря result не нужно.
+"""
+
+s = '1:men 2:kind 90:number 0:sun 34:book 56:mountain 87:wood 54:car 3:island 88:power 7:box 17:star 101:ice'
+
+result = {}
+
+for i in s.split():
+    key, value = i.split(':')
+    result[int(key)] = str(value)
+
+"""
+Используя генератор, дополните приведенный код, чтобы получить словарь result , где ключом будет элемент списка numbers, а значением – отсортированный по возрастанию список всех его делителей начиная с 11.
+"""
+numbers = [34, 10, 4, 6, 10, 23, 90, 100, 21, 35, 95, 1, 36, 38, 19, 1, 6, 87, 1000, 13456, 360]
+
+result = {n : [i for i in range(1, n + 1) if n % i == 0] for n in numbers}

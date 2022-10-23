@@ -2094,3 +2094,59 @@ for i in range(100):
 import random
 mylist = list(input())
 print(''.join(random.sample(mylist, len(mylist))))
+
+
+
+"""
+Напишите программу, которая с помощью модуля random генерирует nn паролей длиной mm символов, состоящих из строчных и прописных английских букв и цифр, кроме тех, которые легко перепутать между собой:
+
+«l» (L маленькое);
+«I» (i большое);
+«1» (цифра);
+«o» и «O» (большая и маленькая буквы);
+«0» (цифра).
+Формат входных данных
+На вход программе подаются два числа nn и mm, каждое на отдельной строке.
+
+Формат выходных данных
+Программа должна вывести nn паролей длиной mm символов в соответствии с условием задачи, каждый на отдельной строке.
+
+Примечание 1. Считать, что числа nn и mm всегда таковы, что требуемые пароли сгенерировать возможно.
+
+Примечание 2. В каждом пароле необязательно должна присутствовать хотя бы одна цифра и буква в верхнем и нижнем регистре.
+
+Примечание 3. Решение задачи удобно оформить в виде двух вспомогательных функций:
+
+функция generate_password(length) – возвращает случайный пароль длиной length символов;
+функция generate_passwords(count, length) – возвращает список, состоящий из count случайных паролей длиной length символов.
+Примечание 4. Приведенные ниже тесты – это лишь образцы возможного ответа. Возможны и другие способы генерации паролей
+"""
+import random
+n, m = int(input()), int(input())
+s = [i for i in '23456789']
+s.extend([chr(i) for i in range(ord('a'), ord('z')) if i not in [ord('l'),ord('i'), ord('o')] ])
+s.extend([chr(i) for i in range(ord('A'), ord('Z')) if i not in [ord('L'),ord('I'), ord('O')] ])
+for _ in range(n):
+    random.shuffle(s)
+    p = ""
+    for i in range(m):
+        p += s[i][0]
+    print(p)
+
+
+"""
+Дополнительное условие: в каждом пароле обязательно должна присутствовать хотя бы одна цифра и как минимум по одной букве в верхнем и нижнем регистре.
+"""
+
+import string 
+import random
+
+def generate_password(length):
+    s = ''.join([i for i in (string.printable[:62]) if i not in '10OolI'])
+    return(''.join(random.sample(s[:8], 1) + random.sample(s[8:30], 1) + random.sample(s[30:], length - 2)))
+
+def generate_passwords(count):
+    return[generate_password(m) for _ in range(count)]
+        
+n, m = int(input()), int(input())
+print(*generate_passwords(n), sep='\n')

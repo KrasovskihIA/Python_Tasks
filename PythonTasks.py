@@ -2174,3 +2174,35 @@ x = sorted(list(map(Decimal , s.split(' '))), reverse=True)
 
 print(sum(x))
 print(*(nlargest(5, x)))
+
+
+"""
+Дополните приведенный код, чтобы он вывел сумму наибольшей и наименьшей цифры Decimal числа.
+"""
+from decimal import Decimal
+num = Decimal(input())
+n = num.__abs__()
+if 0 < n < 1:
+    x = num.as_tuple()
+    print(max(x[1]))
+else:
+    x = num.as_tuple()
+    print(max(x[1])+min(x[1]))   
+
+
+"""
+На вход программе подается Decimal число dd. Напишите программу, которая вычисляет значение выражения:
+e^{d} + \ln(d) + \lg (d) + \sqrt{d}
+e 
+d
+ +ln(d)+lg(d)+ 
+d
+​
+
+"""
+
+from decimal import *
+d = Decimal(input())
+
+resul = d.exp()+d.ln()+d.log10()+d.sqrt()
+print(resul)

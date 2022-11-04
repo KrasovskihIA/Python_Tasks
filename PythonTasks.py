@@ -2612,3 +2612,32 @@ print(max(mixed_list, key=lambda x: x if type(x)==int else False))
 """
 mixed_list = ['beside', 48, 'accelerate', 28, 'beware', 'absorb', 'besides', 'berry', 15, 65, 'abate', 'thursday', 76, 70, 94, 35, 36, 'berth', 41, 'abnormal', 'bicycle', 'bid', 'sunday', 'saturday', 87, 'bigot', 41, 'abort', 13, 60, 'friday', 26, 13, 'accident', 'access', 40, 26, 20, 75, 13, 40, 67, 12, 'abuse', 78, 10, 80, 'accessory', 20, 'bewilder', 'benevolent', 'bet', 64, 38, 65, 51, 95, 'abduct', 37, 98, 99, 14, 'abandon', 'accept', 46, 'abide', 'beyond', 19, 'about', 76, 26, 'abound', 12, 95, 'wednesday', 'abundant', 'abrupt', 'aboard', 50, 89, 'tuesday', 66, 'bestow', 'absent', 76, 46, 'betray', 47, 'able', 11]
 print(*sorted(list(map(str, mixed_list))))
+
+
+
+
+"""
+Напишите программу, которая по трем компонентам заданного цвета, находит компоненты противоположного цвета. 
+
+Формат входных данных
+На вход программе подается строка, содержащая три целых неотрицательных числа, компоненты R, G и B начального цвета,  разделенные символом пробела.
+
+Формат выходных данных
+Программа должна вывести три компонента R, G и B противоположного цвета, разделенные символом пробела.
+
+Примечание. Попробуйте решить задачу в одну строку с помощью встроенной функции map().
+"""
+print(*map(lambda x: 255-int(x), input().split()))
+
+
+"""
+Функция ignore_command() принимает на вход один строковый аргумент command – команда, которую нужно проверить,
+
+и возвращает значение True, если в команде содержится подстрока из списка ignore и False – если нет.
+"""
+
+def ignore_command(command):
+    ignore = ['alias', 'configuration', 'ip', 'sql', 'select', 'update', 'exec', 'del', 'truncate']
+
+    return any(x in command for x in ignore)
+print(ignore_command('get ip'))

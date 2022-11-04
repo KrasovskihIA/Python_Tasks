@@ -2641,3 +2641,48 @@ def ignore_command(command):
 
     return any(x in command for x in ignore)
 print(ignore_command('get ip'))
+
+
+"""
+Используя параллельную итерацию сразу по трем спискам countries, capitals и population выведите информацию о стране в формате:
+
+<capital> is the capital of <country>, population equal <population> people.
+
+
+Moscow is the capital of Russia, population equal 145934462 people.
+Washington is the capital of USA, population equal 331002651 people.
+...
+Для каждой страны информацию выводить на отдельной строке. 
+"""
+
+countries = ['Russia', 'USA', 'UK', 'Germany', 'France', 'India']
+capitals = ['Moscow', 'Washington', 'London', 'Berlin', 'Paris', 'Delhi']
+population = [145_934_462, 331_002_651, 80_345_321, 67_886_011, 65_273_511, 1_380_004_385]
+
+for x, y, z in zip(countries, capitals, population):
+    print(f'{y} is the capital of {x}, population equal {z} people.'.replace('_', ''))
+
+
+
+"""
+IP-адрес – уникальный числовой идентификатор устройства в компьютерной сети, работающей по протоколу TCP/IP.
+
+В 44-й версии IP-адрес представляет собой 3232-битное число. Адрес записывается в виде четырёх десятичных чисел (октетов) со значением от 00 до 255255 (включительно), разделённых точками, например, 192.168.1.2192.168.1.2.
+
+Напишите программу с использованием встроенной функции all() для проверки корректности IP-адреса: все ли октеты в IP-адресе – числа со значением от 00 до 255255.
+
+Формат входных данных
+На вход программе подается строка в формате x.x.x.x, где x – непустой набор символов 0-9, a-z.
+
+Формат выходных данных
+Программа должна вывести True если введенная строка – корректный IP-адрес и False в противном случае.
+
+Примечание. Ведущие нули следует игнорировать:
+"""
+
+ip = input().split('.')
+resul = all(map(lambda x: True if x.upper()==x.lower() and int(x)<=255 and int(x)>=0 else False, ip))
+if resul:
+    print('True')
+else:
+    print('False')

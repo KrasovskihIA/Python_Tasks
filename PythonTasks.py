@@ -2822,3 +2822,71 @@ with open('lines.txt') as file:
             
 for elem in max_str:
     print(elem, end = '')
+
+
+"""
+Вам доступен текстовый файл numbers.txt, каждая строка которого может содержать одно или несколько целых чисел, разделенных одним или несколькими пробелами.
+
+Напишите программу, которая вычисляет сумму чисел в каждой строке и выводит эту сумму на экран (для каждой строки выводится
+"""
+
+with open('numbers.txt') as file:
+
+    for line in file:
+        print(sum(map(int, line.replace('    ', '').split())))
+
+
+
+
+"""
+Вам доступен текстовый файл file.txt, набранный латиницей. Напишите программу, которая выводит количество букв латинского алфавита, слов и строк. Выведите три найденных числа в формате, приведенном в примере.
+
+Формат входных данных
+На вход программе ничего не подается.
+
+Формат выходных данных
+Программа должна вывести три найденных числа в формате, приведенном в примере.
+"""
+letters = 0
+words = 0
+lines = 0
+with open('file.txt') as file:
+    for line in file.readlines():
+        ### Количество линей
+        lines += 1
+        ### Количество букв
+        letters += len("".join(c for c in line if c.isalpha()))
+        ### Количество слов
+        words += len(line.split())
+print(f'Input file contains:\n{letters} letters\n{words} words\n{lines} lines')
+
+
+
+"""
+Вам доступны два текстовых файла first_names.txt и last_names.txt, один с именами, другой с фамилиями.
+
+Напишите программу, которая c помощью модуля random создает 33 случайные пары имя + фамилия, а затем выводит их, каждую на отдельной строке.
+
+Формат входных данных
+На вход программе ничего не подается.
+
+Формат выходных данных
+Программа должна вывести текст в формате, приведенном в примере.
+
+Примечание 1. Если бы файлы first_names.txt и last_names.txt содержали строки:
+"""
+from random import randint
+
+firstNames = []
+lastNames = []
+
+with open('first_names.txt') as file:
+    for line in file.readlines():
+        firstNames.append(line)
+
+with open('last_names.txt') as file:
+    for line in file.readlines():
+        lastNames.append(line)
+
+for i in range(3):
+    print(firstNames[randint(0, len(firstNames))].strip() + ' ' + lastNames[randint(0, len(lastNames))].strip())

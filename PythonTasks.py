@@ -2890,3 +2890,47 @@ with open('last_names.txt') as file:
 
 for i in range(3):
     print(firstNames[randint(0, len(firstNames))].strip() + ' ' + lastNames[randint(0, len(lastNames))].strip())
+
+
+"""
+Вам доступен текстовый файл population.txt с названиями стран и численностью их населения, разделенными символом табуляции '\t'.
+
+Напишите программу выводящую все страны, название которых начинается с буквы 'G', численность населения которых больше чем 500 \, 000500000 человек, не меняя их порядок.
+
+Формат входных данных
+На вход программе ничего не подается.
+
+Формат выходных данных
+Программа должна вывести названия стран, удовлетворяющие условиям задачи, каждое на отдельное строке.
+
+Примечание. Указанный файл можно скачать по ссылке.
+"""
+from random import randint
+
+with open('population.txt') as file:
+    for line in file.readlines():
+        if (line.startswith('G') and int(line.strip().split()[-1]) > 500000):
+            print(line.strip().split()[0])
+
+"""
+Вам доступен CSV-файл data.csv, содержащий информацию в csv формате. Напишите функцию read_csv для чтения данных из этого файла. Она должна возвращать список словарей, интерпретируя первую строку как имена ключей, а каждую последующую строку как значения этих ключей.
+
+Формат входных данных
+На вход программе ничего не подается.
+
+Формат выходных данных
+Программа должна содержать реализованную функцию read_csv.
+"""
+def read_csv():
+    needWriteKeys = True
+    keys = []
+    result = []
+
+    with open('data.csv') as file:
+        for line in file.readlines():
+            if needWriteKeys:
+                keys = line.strip().split(',')
+                needWriteKeys = False
+            else:        
+                result.append(dict(zip(keys, line.strip().split(','))))
+    return result

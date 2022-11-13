@@ -3018,3 +3018,16 @@ with open(input(), 'r') as file:
     list = file.readlines()[-10:]
     for x in list:
         print(x.strip())
+
+
+"""
+На вход программе подается строка текста с именем текстового файла. Напишите программу, выводящую на экран содержимое этого файла, но с заменой всех запрещенных слов звездочками * (количество звездочек равно количеству букв в слове).
+
+Запрещенные слова, разделенные символом пробела, хранятся в текстовом файле forbidden_words.txt. Гарантируется, что все слова в этом файле записаны в нижнем регистре.
+"""
+import re
+with open(input()) as inp, open('forbidden_words.txt') as fw:
+	text, forbidden = inp.read(), fw.read().split()
+for i in forbidden:
+	text = re.sub(i, '*' * len(i), text, flags=re.I)
+print(text)

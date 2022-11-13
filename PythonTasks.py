@@ -3010,3 +3010,11 @@ with open('grades.txt', 'r') as file:
         if spi[0]>=65 and spi[1]>=65 and spi[2]>=65:
             resul+=1
     print(resul)
+
+"""
+На вход программе подается строка текста с именем текстового файла. Напишите программу, выводящую на экран последние 1010 строк данного файла.
+"""
+with open(input(), 'r') as file:
+    list = file.readlines()[-10:]
+    for x in list:
+        print(x.strip())

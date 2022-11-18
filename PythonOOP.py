@@ -450,3 +450,196 @@ class MotherBoard:
 
 
 mb = MotherBoard('Most', CPU('intel', 100), Memory('Test', 1000), Memory('Test2', 1000))
+
+
+"""
+Подвиг 8. Объявите в программе класс Cart (корзина), объекты которого создаются командой:
+
+cart = Cart()
+Каждый объект класса Cart должен иметь локальное свойство goods - список объектов для покупки (объекты классов Table, TV, Notebook и Cup). Изначально этот список должен быть пустым.
+
+В классе Cart объявить методы:
+
+add(self, gd) - добавление в корзину товара, представленного объектом gd;
+remove(self, indx) - удаление из корзины товара по индексу indx;
+get_list(self) - получение из корзины товаров в виде списка из строк:
+
+['<наименовние_1>: <цена_1>',
+'<наименовние_2>: <цена_2>',
+...
+'<наименовние_N>: <цена_N>']
+
+Объявите в программе следующие классы для описания товаров:
+
+Table - столы;
+TV - телевизоры;
+Notebook - ноутбуки;
+Cup - кружки.
+
+Объекты этих классов должны создаваться командой:
+
+gd = ИмяКласса(name, price)
+Каждый объект классов товаров должен содержать локальные свойства:
+
+name - наименование;
+price - цена.
+
+Создайте в программе объект cart класса Cart. Добавьте в него два телевизора (TV), один стол (Table), два ноутбука (Notebook) и одну кружку (Cup). Названия и цены придумайте сами. 
+"""
+
+class Cart:
+    def __init__(self):
+        self.goods = []
+
+    def add(self, gd):
+        self.goods.append(gd)
+
+    def remove(self, indx):
+        self.goods.pop(indx)
+
+    def get_list(self):
+        return [f"{i.name}: {i.price}" for i in self.goods]
+
+class Table:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+class TV:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+class Notebook:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+class Cup:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+
+cart = Cart()
+cart.add(TV('TestTV', 100))
+cart.add(TV('TestTV2', 200))
+cart.add(Table('TestTable', 100))
+cart.add(Notebook('TestNotebook', 100))
+cart.add(Notebook('TestNotebook2', 200))
+cart.add(Cup('TestCup', 100))
+
+
+"""
+Подвиг 9. Вам необходимо реализовать односвязный список (не список языка Python, объекты в списке не хранить, а формировать связанную структуру, показанную на рисунке) из объектов класса ListObject:
+
+
+
+Для этого объявите в программе класс ListObject, объекты которого создаются командой:
+
+obj = ListObject(data)
+Каждый объект класса ListObject должен содержать локальные свойства:
+
+next_obj - ссылка на следующий присоединенный объект (если следующего объекта нет, то next_obj = None);
+data - данные объекта в виде строки.
+
+В самом классе ListObject должен быть объявлен метод:
+
+link(self, obj) - для присоединения объекта obj такого же класса к текущему объекту self (то есть, атрибут next_obj объекта self должен ссылаться на obj).
+
+Прочитайте список строк из входного потока командой:
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+Затем сформируйте односвязный список, в объектах которых (в атрибуте data) хранятся строки из списка lst_in (первая строка в первом объекте, вторая - во втором и  т.д.). На первый добавленный объект класса ListObject должна ссылаться
+"""
+import sys
+
+class ListObject:
+    def __init__(self, data):
+        self.data = data
+        self. next_obj = None
+
+    def link(self, obj):
+        self. next_obj = obj
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+
+head_obj = ListObject(lst_in[0])
+obj = head_obj
+for i in range(1, len(lst_in)):
+    obj_new = ListObject(lst_in[i])
+    obj.link(obj_new)
+    obj = obj_new
+
+
+"""
+ольшой подвиг 10. Объявите два класса: 
+
+Cell - для представления клетки игрового поля;
+GamePole - для управления игровым полем, размером N x N клеток.
+
+С помощью класса Cell предполагается создавать отдельные клетки командой:
+
+c1 = Cell(around_mines, mine)
+Здесь around_mines - число мин вокруг данной клетки поля; mine - булева величина (True/False), означающая наличие мины в текущей клетке. При этом, в каждом объекте класса Cell должны создаваться локальные свойства:
+
+around_mines - число мин вокруг клетки (начальное значение 0);
+mine - наличие мины в текущей клетке (True/False);
+fl_open - открыта/закрыта клетка - булево значение (True/False). Изначально все клетки закрыты (False).
+
+
+
+С помощью класса GamePole должна быть возможность создавать квадратное игровое поле с числом клеток N x N:
+
+pole_game = GamePole(N, M)
+Здесь N - размер поля; M - общее число мин на поле. При этом, каждая клетка представляется объектом класса Cell и все объекты хранятся в двумерном списке N x N элементов - локальном свойстве pole объекта класса GamePole. 
+
+В классе GamePole должны быть также реализованы следующие методы:
+
+init() - инициализация поля с новой расстановкой M мин (случайным образом по игровому полю, разумеется каждая мина должна находиться в отдельной клетке).
+show() - отображение поля в консоли в виде таблицы чисел открытых клеток (если клетка не открыта, то отображается символ #).
+
+При создании экземпляра класса GamePole в его инициализаторе следует вызывать метод init() для первоначальной инициализации игрового поля.
+
+В классе GamePole могут быть и другие вспомогательные методы.
+
+Создайте экземпляр pole_game класса GamePole с размером поля N = 10 и числом мин M = 12. 
+"""
+from random import randint
+class Cell:
+    def __init__(self, around_mines=0,  mine=False):
+        self.around_mines = around_mines
+        self.mine = mine
+        self.fl_open = False
+
+class GamePole:
+    def __init__(self,N, M):
+        self._n = N
+        self._m = M
+        self.pole = [[Cell() for n in range(self._n)] for n in range(self._m)]
+        self.init()
+
+    def init(self):
+        m = 0
+        while m < self._m:
+            i = randint(0, self._n - 1)
+            j = randint(0, self._n - 1)
+            if self.pole[i][j].mine:
+                continue
+            self.pole[i][j].mine = True
+            m += 1
+        
+        indx = (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)
+        for x in range(self._n):
+            for y in range(self._n):
+                if not self.pole[x][y].mine: 
+                    mines = sum((self.pole[x+i][y+j].mine for i, j in indx if 0 <= x+i < self._n and 0 <= y+j < self._n))
+                    self.pole[x][y].around_mines = mines 
+    
+    def show(self):
+        for row in self.pole:
+            print(*map(lambda x : '#' if not x.fl_open else x.around_mines if not x.mine else '*', row))
+
+
+pole_game = GamePole (10, 12)
+pole_game.show()  

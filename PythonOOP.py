@@ -326,3 +326,127 @@ class TriangleChecker:
 a, b, c = map(int, input().split()) 
 tr = TriangleChecker(a, b, c)
 print(tr.is_triangle())
+
+
+"""
+Подвиг 6. Объявите класс Graph, объекты которого можно было бы создавать с помощью команды:
+
+gr_1 = Graph(data)
+где data - список из числовых данных (данные для графика). При создании каждого экземпляра класса должны формироваться следующие локальные свойства:
+
+data - ссылка на список из числовых данных (у каждого объекта должен быть свой список с данными, нужно создавать копию переданного списка);
+is_show - булево значение (True/False) для показа (True) и сокрытия (False) данных графика (по умолчанию True);
+
+В этом классе объявите следующие методы:
+
+set_data(self, data) - для передачи нового списка данных в текущий график;
+show_table(self) - для отображения данных в виде строки из списка чисел (числа следуют через пробел);
+show_graph(self) - для отображения данных в виде графика (метод выводит в консоль сообщение: "Графическое отображение данных: <строка из чисел следующих через пробел>");
+show_bar(self) - для отображения данных в виде столбчатой диаграммы (метод выводит в консоль сообщение: "Столбчатая диаграмма: <строка из чисел следующих через пробел>");
+set_show(self, fl_show) - метод для изменения локального свойства is_show на переданное значение fl_show.
+
+Если локальное свойство is_show равно False, то методы show_table(), show_graph() и show_bar() должны выводить сообщение:
+
+"Отображение данных закрыто"
+
+Прочитайте из входного потока числовые данные с помощью команды:
+
+data_graph = list(map(int, input().split()))
+Создайте объект gr класса Graph с набором прочитанных данных, вызовите метод show_bar(), затем метод set_show() со значением fl_show = False и вызовите метод show_table(). На экране должны отобразиться две соответствующие строки.
+"""
+
+class Graph:
+    def __init__(self, data, is_show=True):
+        self.data = data[:]
+        self.is_show = is_show
+        
+    def set_data(self, data):
+        self = Graph(data)
+        
+    def show_table(self):
+        if self.is_show==False:
+            print('Отображение данных закрыто')
+        else:
+            print(' '.join(self.data))
+        
+    def show_graph(self):
+        if self.is_show==False:
+            print('Отображение данных закрыто')
+        else:
+            string = ' '.join(self.data)
+            print(f'Графическое отображение данных: {string}')
+        
+    def show_bar(self):
+        if self.is_show==False:
+            print('Отображение данных закрыто')
+        else:
+            string = ' '.join(map(str, self.data))
+            print(f'Столбчатая диаграмма: {string}')
+        
+    def set_show(self, fl_show):
+        self.is_show = fl_show
+        
+        
+data_graph = list(map(int, input().split()))
+
+gr=Graph(data_graph)
+gr.show_bar()
+gr.set_show(fl_show = False)
+gr.show_table()
+
+
+"""
+Подвиг 7. Объявите в программе следующие несколько классов:
+
+CPU - класс для описания процессоров;
+Memory - класс для описания памяти;
+MotherBoard - класс для описания материнских плат.
+
+Обеспечить возможность создания объектов каждого класса командами:
+
+cpu = CPU(наименование, тактовая частота)
+mem = Memory(наименование, размер памяти)
+mb = MotherBoard(наименование, процессор, память1, память2, ..., памятьN)
+Обратите внимание при создании объекта класса MotherBoard можно передавать несколько объектов класса Memory, максимум N - по числу слотов памяти на материнской плате (N = 4).
+
+Объекты классов должны иметь следующие локальные свойства: 
+
+для класса CPU: name - наименование; fr - тактовая частота;
+для класса Memory: name - наименование; volume - объем памяти;
+для класса MotherBoard: name - наименование; cpu - ссылка на объект класса CPU; total_mem_slots = 4 - общее число слотов памяти (атрибут прописывается с этим значением и не меняется); mem_slots - список из объектов класса Memory (максимум total_mem_slots = 4 штук по максимальному числу слотов памяти).
+
+Класс MotherBoard должен иметь метод get_config(self) для возвращения текущей конфигурации компонентов на материнской плате в виде следующего списка из четырех строк:
+
+['Материнская плата: <наименование>',
+'Центральный процессор: <наименование>, <тактовая частота>',
+'Слотов памяти: <общее число слотов памяти>',
+'Память: <наименование_1> - <объем_1>; <наименование_2> - <объем_2>; ...; <наименование_N> - <объем_N>']
+
+Создайте объект mb класса MotherBoard с одним CPU (объект класса CPU) и двумя слотами памяти (объекты класса Memory).
+"""
+
+class CPU:
+    def __init__(self, name, fr):
+        self.name = name
+        self.fr = fr
+
+class Memory:
+    def __init__(self, name, volume):
+        self.name = name
+        self.volume = volume
+
+class MotherBoard:
+    def __init__(self, name, cpu, *args):
+        self.name = name
+        self.cpu = cpu
+        self.total_mem_slots = 4
+        self.mem_slots = args[:self.total_mem_slots]
+
+    def get_config(self):
+        return [f'Материнская плата:{self.name}',
+                f'Центральный процессор: {self.cpu.name},{self.cpu.fr}',
+                f'Слотов памяти:{self.total_mem_slots}',
+                'Память:' + ';'.join(map(lambda x: f'{x.name} - {x.volume}', self.mem_slots))]
+
+
+mb = MotherBoard('Most', CPU('intel', 100), Memory('Test', 1000), Memory('Test2', 1000))

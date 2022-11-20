@@ -643,3 +643,50 @@ class GamePole:
 
 pole_game = GamePole (10, 12)
 pole_game.show()  
+
+
+"""
+Видео-разбор подвига (решение смотреть только после своей попытки): https://youtu.be/7aVqWfrAdqw
+
+Подвиг 6. Объявите класс AbstractClass, объекты которого нельзя было бы создавать. При выполнении команды:
+
+obj = AbstractClass()
+переменная obj должна ссылаться на строку с содержимым:
+
+"Ошибка: нельзя создавать объекты абстрактного класса"
+"""
+class AbstractClass:
+    __instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            return 'Ошибка: нельзя создавать объекты абстрактного класса'
+            
+
+
+"""
+Подвиг 7. Объявите класс SingletonFive, с помощью которого можно было бы создавать объекты командой:
+
+a = SingletonFive(<наименование>)
+Здесь <наименование> - это данные, которые сохраняются в локальном свойстве name созданного объекта.
+
+Этот класс должен формировать только первые пять объектов. Остальные (шестой, седьмой и т.д.) должны быть ссылкой на последний (пятый) созданный объект.
+
+Создайте первые десять объектов класса SingletonFive с помощью следующего фрагмента программы:
+
+objs = [SingletonFive(str(n)) for n in range(10)]
+"""
+class SingletonFive:
+    __instance = None
+    __count = 0
+    
+    def __new__(cls, *args, **kwargs):
+        if cls.__count < 5:
+            cls.__instance = super().__new__(cls)
+            cls.__count +=1
+        return cls.__instance 
+        
+    def __init__(self, name):
+        self.name = name
+        
+objs = [SingletonFive(str(n)) for n in range(10)]

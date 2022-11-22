@@ -1025,3 +1025,181 @@ class CardCheck:
             
 is_number = CardCheck.check_card_number("1234-5678-9012-0000")
 is_name = CardCheck.check_name("SERGEI BALAKIREV")
+
+
+
+"""
+Подвиг 9. Объявите в программе класс Video с двумя методами:
+
+create(self, name) - для задания имени name текущего видео (метод сохраняет имя name в локальном атрибуте name объекта класса Video);
+play(self) - для воспроизведения видео (метод выводит на экран строку "воспроизведение видео <name>").
+
+Объявите еще один класс с именем YouTube, в котором объявите два метода (с декоратором @classmethod):
+
+add_video(cls, video) - для добавления нового видео (метод помещает объект video класса Video в список);
+play(cls, video_indx) - для проигрывания видео из списка по указанному индексу (индексация с нуля).
+
+(здесь cls - ссылка на класс YouTube). И список (тоже внутри класса YouTube):
+
+videos - для хранения добавленных объектов класса Video (изначально список пуст).
+
+Метод play() класса YouTube должен обращаться к объекту класса Video по индексу списка videos и, затем, вызывать метод play() класса Video.
+
+Методы add_video и play вызывайте напрямую из класса YouTube. Создавать экземпляр этого класса не нужно.
+
+Создайте два объекта v1 и v2 класса Video, затем, через метод create() передайте им имена "Python" и "Python ООП". После этого с помощью метода add_video класса YouTube, добавьте в него эти два видео и воспроизведите (с помощью метода play класса YouTube) сначала первое, а затем, второе видео.
+"""
+
+class Video:
+ 
+    def create(self, name):
+        self.name = name
+        
+    def play(self):
+        print(f"воспроизведение видео {self.name}")
+
+class YouTube:
+    videos = []
+    
+    @classmethod
+    def add_video(cls, video):
+        cls.videos.append(video)
+        
+    @classmethod
+    def play(cls, video_indx):
+        cls.videos[video_indx].play()
+        
+v1 = Video()
+v2 = Video()
+
+v1.create('Python')
+v2.create('Python ООП')
+
+YouTube.add_video(v1)
+YouTube.add_video(v2)
+YouTube.play(0)
+YouTube.play(1)
+
+
+"""
+Подвиг 10 (на повторение). Объявите класс AppStore - интернет-магазин приложений для устройств под iOS. В этом классе должны быть реализованы следующие методы:
+
+add_application(self, app) - добавление нового приложения app в магазин;
+remove_application(self, app) - удаление приложения app из магазина;
+block_application(self, app) - блокировка приложения app (устанавливает локальное свойство blocked объекта app в значение True);
+total_apps(self) - возвращает общее число приложений в магазине.
+
+Класс AppStore предполагается использовать следующим образом (эти строчки в программе не писать):
+
+store = AppStore()
+app_youtube = Application("Youtube")
+store.add_application(app_youtube)
+store.remove_application(app_youtube)
+Здесь Application - класс, описывающий добавляемое приложение с указанным именем. Каждый объект класса Application должен содержать локальные свойства:
+
+name - наименование приложения (строка);
+blocked - булево значение (True - приложение заблокировано; False - не заблокировано, изначально False).
+
+Как хранить список приложений в объектах класса AppStore решите сами.
+
+P.S. В программе нужно только объявить классы с указанным функционалом.
+"""
+
+class AppStore:
+    def __init__ (self):
+        self.store = []
+     
+
+    def add_application(self, app):
+        self.store.append(app)
+        
+
+    def remove_application(self, app):
+        self.store.remove(app)
+        
+
+    def block_application(self, app):
+         app.blocked = True
+         
+
+    def total_apps(self):
+        return len(self.store)
+        
+
+
+class Application:
+    
+    def __init__(self, name, blocked=False):
+        self.name = name
+        self.blocked = blocked
+        
+        
+store = AppStore()
+app_youtube = Application("Youtube")
+store.add_application(app_youtube)
+store.remove_application(app_youtube)
+
+
+
+"""
+Объявите класс для мессенджера с именем Viber. В этом классе должны быть следующие методы:
+
+add_message(msg) - добавление нового сообщения в список сообщений;
+remove_message(msg) - удаление сообщения из списка;
+set_like(msg) - поставить/убрать лайк для сообщения msg (т.е. изменить атрибут fl_like объекта msg: если лайка нет то он ставится, если уже есть, то убирается);
+show_last_message(число) - отображение последних сообщений;
+total_messages() - возвращает общее число сообщений.
+
+Эти методы предполагается использовать следующим образом (эти строчки в программе не писать):
+
+msg = Message("Всем привет!")
+Viber.add_message(msg)
+Viber.add_message(Message("Это курс по Python ООП."))
+Viber.add_message(Message("Что вы о нем думаете?"))
+Viber.set_like(msg)
+Viber.remove_message(msg)
+Класс Message (необходимо также объявить) позволяет создавать объекты-сообщения со следующим набором локальных свойств:
+
+text - текст сообщения (строка);
+fl_like - поставлен или не поставлен лайк у сообщения (булево значение True - если лайк есть и False - в противном случае, изначально False);
+
+P.S. Как хранить список сообщений, решите самостоятельно.
+"""
+
+class Viber:
+    message = []
+    
+    @classmethod  
+    def add_message(cls, msg):
+        cls.message.append(msg)
+     
+    @classmethod    
+    def remove_message(cls, msg):
+        cls.message.remove(msg)
+    
+    @classmethod      
+    def set_like(cls, msg):
+        msg.fl_like = not msg.fl_like
+    
+    @classmethod          
+    def show_last_message(cls, x):
+        print (cls.message[-x])
+    
+    @classmethod      
+    def total_messages(cls):
+        return len(cls.message)
+    
+    
+    
+class Message :
+    def __init__(self, text, fl_like = False):
+        self.text = text
+        self.fl_like = fl_like
+        
+        
+msg = Message("Всем привет!")
+Viber.add_message(msg)
+Viber.add_message(Message("Это курс по Python ООП."))
+Viber.add_message(Message("Что вы о нем думаете?"))
+Viber.set_like(msg)
+Viber.remove_message(msg)

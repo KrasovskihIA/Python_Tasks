@@ -813,3 +813,215 @@ class Loader:
 ld = Loader()
 s = input()
 res = ld.parse_format(s, Factory())
+
+
+
+
+"""
+Подвиг 6. В программе предполагается реализовать парсер (обработчик) строки с данными string в определенный выходной формат. Для этого объявлен следующий класс:
+
+class Loader:
+    @staticmethod
+    def parse_format(string, factory):
+        seq = factory.build_sequence()
+        for sub in string.split(","):
+            item = factory.build_number(sub)
+            seq.append(item)
+
+        return seq
+И предполагается его использовать следующим образом:
+
+res = Loader.parse_format("4, 5, -6", Factory)
+На выходе (в переменной res) ожидается получать список из набора целых чисел. Например, для заданной строки, должно получиться:
+
+[4, 5, -6]
+
+Для реализации этой идеи необходимо вначале программы прописать класс Factory с двумя статическими методами:
+
+build_sequence() - для создания пустого списка (метод возвращает пустой список);
+build_number(string) - для преобразования строки (string) в целое число (метод возвращает полученное целочисленное значение).
+
+Объявите класс с именем Factory, чтобы получать на выходе искомый результат.
+
+P.S. В программе на экран ничего выводить не нужно.
+"""
+
+class Factory:
+    def build_sequence():
+        return []
+        
+    def build_number(string):
+        return int(string)
+
+class Loader:
+    @staticmethod
+    def parse_format(string, factory):
+        seq = factory.build_sequence()
+        for sub in string.split(","):
+            item = factory.build_number(sub)
+            seq.append(item)
+
+        return seq
+
+
+# эти строчки не менять!
+res = Loader.parse_format("1, 2, 3, -5, 10", Factory)
+
+
+
+"""
+Подвиг 7. В программе объявлен следующий класс для работы с формами ввода логин/пароль:
+
+class FormLogin:
+    def __init__(self, lgn, psw):
+        self.login = lgn
+        self.password = psw
+
+    def render_template(self):
+        return "\n".join(['<form action="#">', self.login.get_html(), self.password.get_html(), '</form>'])
+Который предполагается использовать следующим образом:
+
+login = FormLogin(TextInput("Логин"), PasswordInput("Пароль"))
+html = login.render_template()
+Необходимо прописать классы TextInput и PasswordInput, объекты которых формируются командами:
+
+login = TextInput(name, size)
+psw = PasswordInput(name, size)
+В каждом объекте этих классов должны быть следующие локальные свойства:
+
+name - название для поля (сохраняет передаваемое имя, например, "Логин" или "Пароль");
+size - размер поля ввода (целое число, по умолчанию 10).
+
+Также классы TextInput и PasswordInput должны иметь метод:
+
+get_html(self) - возвращает сформированную HTML-строку в формате (1-я строка для класса TextInput ; 2-я - для класса PasswordInput):
+
+<p class='login'><имя поля>: <input type='text' size=<размер поля> />
+<p class='password'><имя поля>: <input type='text' size=<размер поля> />
+
+Например, для поля login:
+
+<p class='login'>Логин: <input type='text' size=10 />
+
+Также классы TextInput и PasswordInput должны иметь метод класса (@classmethod):
+
+check_name(cls, name) - для проверки корректности переданного имя поля (следует вызывать в инициализаторе) по следующим критериям:
+
+- длина имени не менее 3 символов и не более 50;
+- в именах могут использоваться только символы русского, английского алфавитов, цифры и пробелы
+
+Если проверка не проходит, то генерировать исключение командой:
+
+raise ValueError("некорректное поле name")
+Для проверки допустимых символов в каждом классе должен быть прописан атрибут CHARS_CORRECT:
+
+CHARS = "абвгдеёжзийклмнопрстуфхцчшщьыъэюя " + ascii_lowercase
+CHARS_CORRECT = CHARS + CHARS.upper() + digits
+По заданию нужно объявить только классы TextInput и PasswordInput с соответствующим функционалом. Более ничего.
+
+P. S. В данном задании получится дублирование кода в классах TextInput и PasswordInput. На данном этапе - это нормально.
+"""
+
+from string import ascii_lowercase, digits
+
+# здесь объявляйте классы TextInput и PasswordInput
+class TextInput:
+    CHARS = "абвгдеёжзийклмнопрстуфхцчшщьыъэюя " + ascii_lowercase
+    CHARS_CORRECT = CHARS + CHARS.upper() + digits   
+    
+    def __init__(self, name, size=10):
+        self.check_name(name)
+        self.name = name
+        self.size = size
+        
+    def get_html(self):
+        return f"<p class='login'>{self.name}: <input type='text' size={self.size} />"
+        
+    @classmethod
+    def check_name(cls, name):
+        if type(name) != str or len(name) < 3 or len(name) > 50:
+            raise ValueError("некорректное поле name")
+            
+        if not set(name) < set(cls.CHARS_CORRECT):
+            raise ValueError("некорректное поле name")
+
+
+class PasswordInput:
+    CHARS = "абвгдеёжзийклмнопрстуфхцчшщьыъэюя " + ascii_lowercase
+    CHARS_CORRECT = CHARS + CHARS.upper() + digits   
+    
+    def __init__(self, name, size=10):
+        self.check_name(name)
+        self.name = name
+        self.size = size
+        
+    def get_html(self):
+        return f"<p class='password'>{self.name}: <input type='text' size={self.size} />"
+        
+    @classmethod
+    def check_name(cls, name):
+        if type(name) != str or len(name) < 3 or len(name) > 50:
+            raise ValueError("некорректное поле name")
+            
+        if not set(name) < set(cls.CHARS_CORRECT):
+            raise ValueError("некорректное поле name")
+
+
+
+class FormLogin:
+    def __init__(self, lgn, psw):
+        self.login = lgn
+        self.password = psw
+
+    def render_template(self):
+        return "\n".join(['<form action="#">', self.login.get_html(), self.password.get_html(), '</form>'])
+
+
+# эти строчки не менять
+login = FormLogin(TextInput("Логин"), PasswordInput("Пароль"))
+html = login.render_template()
+
+
+
+"""
+Подвиг 8. Объявите класс CardCheck для проверки корректности информации на пластиковых картах. Этот класс должен иметь следующие методы:
+
+check_card_number(number) - проверяет строку с номером карты и возвращает булево значение True, если номер в верном формате и False - в противном случае. Формат номера следующий: XXXX-XXXX-XXXX-XXXX, где X - любая цифра (от 0 до 9).
+check_name(name) - проверяет строку name с именем пользователя карты. Возвращает булево значение True, если имя записано верно и False - в противном случае.
+
+Формат имени: два слова (имя и фамилия) через пробел, записанные заглавными латинскими символами и цифрами. Например, SERGEI BALAKIREV.
+
+Предполагается использовать класс CardCheck следующим образом (эти строчки в программе не писать):
+
+is_number = CardCheck.check_card_number("1234-5678-9012-0000")
+is_name = CardCheck.check_name("SERGEI BALAKIREV")
+Для проверки допустимых символов в классе должен быть прописан атрибут:
+
+CHARS_FOR_NAME = ascii_lowercase.upper() + digits
+Подумайте, как правильнее объявить методы check_card_number и check_name (декораторами @classmethod и @staticmethod).
+
+P.S. В программе только объявить класс. На экран ничего выводить не нужно.
+"""
+from string import ascii_lowercase, digits
+import re
+
+class CardCheck:
+    CHARS_FOR_NAME = ascii_lowercase.upper() + digits
+
+    @staticmethod 
+    def check_card_number(number):
+        if re.match(r'\d{4}-\d{4}-\d{4}-\d{4}$', number):
+            return True
+        else:
+            return False
+     
+    @staticmethod      
+    def check_name(name):
+        if re.match(r'[A-Z]+\s[A-Z]+$', name):
+            return True
+        else:
+            return False
+            
+            
+is_number = CardCheck.check_card_number("1234-5678-9012-0000")
+is_name = CardCheck.check_name("SERGEI BALAKIREV")

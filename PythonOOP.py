@@ -1303,3 +1303,78 @@ class Data:
     def __init__(self, msg, ip):
         self.data = msg
         self.ip = ip
+
+
+"""
+Подвиг 3. Объявите класс с именем Clock и определите в нем следующие переменные и методы:
+
+- приватная локальная переменная time для хранения текущего времени, целое число (своя для каждого объекта класса Clock с начальным значением 0);
+- публичный метод set_time(tm) для установки текущего времени (присваивает значение tm приватному локальному свойству time, если метод check_time(tm) возвратил True);
+- публичный метод get_time() для получения текущего времени из приватной локальной переменной time;
+- приватный метод класса check_time(tm) для проверки корректности времени в переменной tm (возвращает True, если значение корректно и False - в противном случае).
+
+Проверка корректности выполняется по критерию: tm должна быть целым числом, больше или равна нулю и меньше 100 000.
+
+Объекты класса Clock предполагается использовать командой:
+
+clock = Clock(время)
+Создайте объект clock класса Clock и установите время, равным 4530.
+"""
+
+class Clock :
+    def __init__(self, tm):
+        self.__time = 0
+        if self.__check_time(tm):
+            self.__time = tm
+    @classmethod
+    def __check_time(cls, tm):
+        return type(tm)==int and 0 <= tm < 100000
+    
+    def set_time(self, tm):
+        if self.__check_time(tm):
+            self.__time = tm
+        
+    def  get_time(self):
+        return self.__time
+        
+            
+clock = Clock(4530)
+
+"""
+Подвиг 4. Объявите класс с именем Money и определите в нем следующие переменные и методы:
+
+- приватная локальная переменная money (целочисленная) для хранения количества денег (своя для каждого объекта класса Money);
+- публичный метод set_money(money) для передачи нового значения приватной локальной переменной money (изменение выполняется только если метод check_money(money) возвращает значение True);
+- публичный метод get_money() для получения текущего объема средств (денег);
+- публичный метод add_money(mn) для прибавления средств из объекта mn класса Money к средствам текущего объекта;
+- приватный метод класса check_money(money) для проверки корректности объема средств в параметре money (возвращает True, если значение корректно и False - в противном случае).
+
+Проверка корректности выполняется по критерию: параметр money должен быть целым числом, больше или равным нулю.
+"""
+class Money :
+    def __init__(self, money):
+        self.__money = money
+        
+    @classmethod
+    def check_money(cls,money):
+        return type(money) == int and money >= 0
+
+    def set_money(self, money):
+        if self.check_money(money):
+            self.__money = money
+
+    def get_money(self):
+        return self.__money
+
+    def add_money(self, mn):
+        self.__money += mn.get_money()
+            
+
+mn_1 = Money(10)
+mn_2 = Money(20)
+mn_1.set_money(100)
+mn_2.add_money(mn_1)
+m1 = mn_1.get_money()    # 100
+m2 = mn_2.get_money()    # 120
+
+

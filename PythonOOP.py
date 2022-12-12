@@ -2176,3 +2176,141 @@ class PhoneNumber:
             return True
         else:
             return False
+
+
+
+"""
+Подвиг 6. Объявите дескриптор данных FloatValue, который бы устанавливал и возвращал вещественные значения. При записи вещественного числа должна выполняться проверка на вещественный тип данных. Если проверка не проходит, то генерировать исключение командой:
+
+raise TypeError("Присваивать можно только вещественный тип данных.")
+Объявите класс Cell, в котором создается объект value дескриптора FloatValue. А объекты класса Cell должны создаваться командой:
+
+cell = Cell(начальное значение ячейки)
+Объявите класс TableSheet, с помощью которого создается таблица из N строк и M столбцов следующим образом:
+
+table = TableSheet(N, M)
+Каждая ячейка этой таблицы должна быть представлена объектом класса Cell, работать с вещественными числами через объект value (начальное значение должно быть 0.0).
+
+В каждом объекте класса TableSheet должен формироваться локальный атрибут:
+
+cells - список (вложенный) размером N x M, содержащий ячейки таблицы (объекты класса Cell).
+
+Создайте объект table класса TableSheet с размером таблицы N = 5, M = 3. Запишите в эту таблицу числа от 1.0 до 15.0 (по порядку).
+
+P.S. На экран в программе выводить ничего не нужно.
+"""
+class FloatValue: 
+    @classmethod
+    def check(cls, value):
+        if type(value) != float:
+            raise TypeError("Присваивать можно только вещественный тип данных.")
+            
+    def __set_name__(self, owner, name):
+        self.name = "_" + name
+ 
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+ 
+    def __set__(self, instance, value):
+        self.check(value)
+        setattr(instance, self.name, value)
+        
+class Cell:
+    value = FloatValue()
+    
+    def __init__(self, value=0.0):
+        self.value = value
+        
+class TableSheet:
+    def __init__(self, N, M):
+        self.cells = [[Cell() for _ in range(M)] for _ in range(N)]
+        
+        
+        
+table = TableSheet(5, 3)
+n = 1.0
+for i in range(5):
+    for j in range(3):
+        table.cells[i][j].value = n
+        n += 1.0
+
+
+"""
+Подвиг 7. Объявите класс ValidateString для проверки корректности переданной строки. Объекты этого класса создаются командой:
+
+validate = ValidateString(min_length=3, max_length=100)
+где min_length - минимальное число символов в строке; max_length - максимальное число символов в строке.
+В классе ValidateString должен быть реализован метод:
+
+validate(self, string) - возвращает True, если string является строкой (тип str) и длина строки в пределах [min_length; max_length]. Иначе возвращается False.
+
+Объявите дескриптор данных StringValue для работы со строками, объекты которого создаются командой:
+
+st = StringValue(validator=ValidateString(min_length, max_length))
+При каждом присвоении значения объекту st должен вызываться валидатор (объект класса ValidateString) и с помощью метода validate() проверяться корректность присваиваемых данных. Если данные некорректны, то присвоение не выполняется (игнорируется).
+
+Объявите класс RegisterForm с тремя объектами дескриптора StringValue:
+
+login = StringValue(...) - для ввода логина;
+password = StringValue(...)  - для ввода пароля;
+email = StringValue(...)  - для ввода Email.
+
+Объекты класса RegisterForm создаются командой:
+
+form = RegisterForm(логин, пароль, email)
+где логин, пароль, email - начальные значения логина, пароля и Email.
+В классе RegisterForm также должны быть объявлены методы:
+
+get_fields() - возвращает список из значений полей в порядке [login, password, email];
+show() - выводит в консоль многострочную строку в формате:
+
+<form>
+Логин: <login>
+Пароль: <password>
+Email: <email>
+</form>
+
+P.S. В программе требуется объявить классы с описанным функционалом. На экран в программе выводить ничего не нужно.
+"""
+
+class ValidateString:
+    def __init__(self, min_length=3, max_length=100):
+        self.min_length = min_length
+        self.max_length = max_length
+    
+    def validate(self, string):
+        return type(string) == str and self.min_length <= len(string) <= self.max_length    
+            
+class  StringValue:
+    def __init__(self, validator):
+        self.validator = validator
+        
+    def __set_name__(self, owner, name):
+        self.name = "_"+ name
+        
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+        
+    def __set__(self, instance, value):
+        if self.validator.validate(value):
+            return setattr(instance, self.name, value)
+            
+class RegisterForm:
+    
+    login = StringValue(validator=ValidateString())
+    password = StringValue(validator=ValidateString())
+    email = StringValue(validator=ValidateString())
+    
+    def __init__(self, login, password, email):
+        self.login = login
+        self.password = password
+        self.email = email
+        
+    def get_fields(self):
+        return [self.login, self.password, self.email]
+        
+    def show(self):
+        print (f'<form>\nЛогин: {self.login}\nПароль: {self.password}\nEmail: <{self.email}\n</form>')
+        
+        
+

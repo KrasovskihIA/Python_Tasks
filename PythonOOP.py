@@ -2314,3 +2314,145 @@ class RegisterForm:
         
         
 
+"""
+Подвиг 8. Вы начинаете создавать интернет-магазин. Для этого в программе объявляется класс SuperShop, объекты которого создаются командой:
+
+myshop = SuperShop(название магазина)
+В каждом объекте класса SuperShop должны формироваться следующие локальные атрибуты:
+
+name - название магазина (строка);
+goods - список из товаров.
+
+Также в классе SuperShop должны быть методы:
+
+add_product(product) - добавление товара в магазин (в конец списка goods);
+remove_product(product) - удаление товара из магазина (из списка goods).
+
+Здесь product - это объект класса Product, описывающий конкретный товар. В этом классе следует объявить следующие дескрипторы:
+
+name = StringValue(min_length, max_length)    # min_length - минимально допустимая длина строки; max_length - максимально допустимая длина строки
+price = PriceValue(max_value)    # max_value - максимально допустимое значение
+
+Объекты класса Product будут создаваться командой:
+
+pr = Product(наименование, цена)
+Классы StringValue и PriceValue - это дескрипторы данных. Класс StringValue должен проверять, что присваивается строковый тип с длиной строки в диапазоне [2; 50], т.е. min_length = 2, max_length = 50. Класс PriceValue должен проверять, что присваивается вещественное или целочисленное значение в диапазоне [0; 10000], т.е. max_value = 10000. Если проверки не проходят, то соответствующие (прежние) значения меняться не должны.
+
+Пример использования класса SuperShop (эти строчки в программе писать не нужно):
+"""
+
+class StringValue:
+    def __init__(self, min_length, max_length):
+        self.min_length = min_length
+        self.max_length = max_length    
+
+    def __set_name__(self, owner, name):
+        self.name = "_"+ name
+        
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+        
+    def __set__(self, instance, value):
+        if type(value) == str and self.min_length <= len(value) <= self.max_length:
+             setattr(instance, self.name, value)
+            
+
+class  PriceValue:
+    def __init__(self, max_value):
+        self.max_value = max_value
+        
+    def __set_name__(self, owner, name):
+        self.name = "_"+ name
+        
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name)
+        
+    def __set__(self, instance, value):
+        if type(value) in (float, int) and 0 <= value <= self.max_value:
+             setattr(instance, self.name, value)
+
+
+class SuperShop:
+    def __init__(self, name):
+        self.name = name
+        self.goods = []
+        
+    def add_product(self, product):
+        self.goods.append(product)
+        
+    def remove_product(self, product):
+        self.goods.remove(product)
+        
+class Product:
+    name = StringValue(2, 50)
+    price = PriceValue(10000)
+    
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+    
+    
+shop = SuperShop("У Балакирева")
+shop.add_product(Product("Курс по Python", 0))
+shop.add_product(Product("Курс по Python ООП", 2000))
+for p in shop.goods:
+    print(f"{p.name}: {p.price}")
+
+
+"""
+Подвиг 9 (на повторение). Необходимо объявить класс Bag (рюкзак), объекты которого будут создаваться командой:
+
+bag = Bag(max_weight)
+где max_weight - максимальный суммарный вес вещей, который выдерживает рюкзак (целое число).
+
+В каждом объекте этого класса должен создаваться локальный приватный атрибут:
+
+__things - список вещей в рюкзаке (изначально список пуст).
+
+Сам же класс Bag должен иметь объект-свойство:
+
+things - для доступа к локальному приватному атрибуту __things (только для считывания, не записи).
+
+Также в классе Bag должны быть реализованы следующие методы:
+
+add_thing(self, thing) - добавление нового предмета в рюкзак (добавление возможно, если суммарный вес (max_weight) не будет превышен, иначе добавление не происходит);
+remove_thing(self, indx) - удаление предмета по индексу списка __things;
+get_total_weight(self) - возвращает суммарный вес предметов в рюкзаке.
+
+Каждая вещь описывается как объект класса Thing и создается командой:
+
+t = Thing(название, вес)
+где название - наименование предмета (строка); вес - вес предмета (целое или вещественное число).
+
+В каждом объекте класса Thing должны формироваться локальные атрибуты:
+
+name - наименование предмета;
+weight - вес предмета.
+
+Пример использования классов (эти строчки в программе писать не нужно):
+"""
+
+class Thing:
+    def __init__(self, name, weight):
+        self.name = name
+        self.weight = weight 
+
+class Bag:   
+    def __init__(self, max_weight):
+        self.max_weight = max_weight
+        self.__things =[]
+        
+    @property
+    def things(self):
+        return self.__things
+        
+    def add_thing(self, thing):
+        s = self.get_total_weight()
+        if s + thing.weight <= self.max_weight:
+            self.__things.append(thing)
+        
+    def remove_thing(self, indx):
+        self.__things.pop(indx)
+        
+    def get_total_weight(self):
+        return sum(i.weight for i in self.__things)

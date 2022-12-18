@@ -2956,3 +2956,69 @@ class Circle:
     @radius.setter
     def radius (self, value):
         self.__radius = value
+
+
+"""
+Подвиг 9. Объявите в программе класс Dimensions (габариты) с атрибутами:
+
+MIN_DIMENSION = 10
+MAX_DIMENSION = 1000
+
+Каждый объект класса Dimensions должен создаваться командой:
+
+d3 = Dimensions(a, b, c)   # a, b, c - габаритные размеры
+и содержать локальные атрибуты:
+
+__a, __b, __c - габаритные размеры (целые или вещественные числа).
+
+Для работы с этими локальными атрибутами в классе Dimensions следует прописать следующие объекты-свойства:
+
+a, b, c - для изменения и считывания соответствующих локальных атрибутов __a, __b, __c.
+
+При изменении значений __a, __b, __c следует проверять, что присваиваемое значение число в диапазоне [MIN_DIMENSION; MAX_DIMENSION]. Если это не так, то новое значение не присваивается (игнорируется).
+
+С помощью магических методов данного занятия запретить создание локальных атрибутов MIN_DIMENSION и MAX_DIMENSION в объектах класса Dimensions. При попытке это сделать генерировать исключение:
+
+raise AttributeError("Менять атрибуты MIN_DIMENSION и MAX_DIMENSION запрещено.")
+"""
+
+class Dimensions:
+    MIN_DIMENSION = 10
+    MAX_DIMENSION = 1000
+    
+    def __init__(self, a, b, c):
+        self.__a = a
+        self.__b = b
+        self.__c = c
+        
+    def __setattr__(self, key, value):
+        if key == ("MIN_DIMENSION" and "MAX_DIMENSION"):
+            raise AttributeError("Менять атрибуты MIN_DIMENSION и MAX_DIMENSION запрещено.")
+            
+        if type(value) in (int, float) and self.MIN_DIMENSION <= value <= self.MAX_DIMENSION:
+            object.__setattr__(self, key, value)
+        
+        
+    @property
+    def a (self):
+        return self.__a
+    
+    @a.setter
+    def a (self, value):
+        self.__a = value
+        
+    @property
+    def b (self):
+        return self.__b
+    
+    @b.setter
+    def b (self, value):
+        self.__b = value
+        
+    @property
+    def c (self):
+        return self.__c
+    
+    @c.setter
+    def c (self, value):
+        self.__c = value

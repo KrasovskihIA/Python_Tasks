@@ -2834,3 +2834,125 @@ class Papyri:
         self.name = name
         self.date = date
         self.descr = descr
+
+
+
+
+"""
+Подвиг 7 (на повторение). Объявите класс SmartPhone, объекты которого предполагается создавать командой:
+
+sm = SmartPhone(марка смартфона)
+Каждый объект должен содержать локальные атрибуты:
+
+model - марка смартфона (строка);
+apps - список из установленных приложений (изначально пустой).
+
+Также в классе SmartPhone должны быть объявлены следующие методы:
+
+add_app(self, app) - добавление нового приложения на смартфон (в конец списка apps);
+remove_app(self, app) - удаление приложения по ссылке на объект app.
+
+При добавлении нового приложения проверять, что оно отсутствует в списке apps (отсутствует объект соответствующего класса).
+
+Каждое приложение должно определяться своим классом. Для примера объявите следующие классы:
+
+AppVK - класс приложения ВКонтаке;
+AppYouTube - класс приложения YouTube;
+AppPhone - класс приложения телефона.
+
+Объекты этих классов должны создаваться следующим образом (с соответствующим набором локальных атрибутов):
+"""
+
+class SmartPhone:
+    def __init__(self, model):
+        self.model = model
+        self.apps = []
+        
+    def add_app(self, app):
+        if len(tuple(filter(lambda x: type(x) == type(app), self.apps))) == 0:
+            self.apps.append(app)
+            
+    def remove_app(self, app):
+        self.apps.remove(app)
+        
+class AppVK:
+    def __init__(self):
+        self.name = "ВКонтакте"
+    
+class AppYouTube:
+    def __init__(self, memory_max):
+        self.name = "YouTube"
+        self.memory_max = memory_max
+        
+class AppPhone:
+    def __init__(self, phones):
+        self.name = "Phone"
+        self.phone_list = phones
+
+
+
+"""
+Подвиг 8. Объявите класс Circle (окружность), объекты которого должны создаваться командой:
+
+circle = Circle(x, y, radius)   # x, y - координаты центра окружности; radius - радиус окружности
+В каждом объекте класса Circle должны формироваться локальные приватные атрибуты:
+
+__x, __y - координаты центра окружности (вещественные или целые числа);
+__radius - радиус окружности (вещественное или целое положительное число).
+
+Для доступа к этим приватным атрибутам в классе Circle следует объявить объекты-свойства (property):
+
+x, y - для изменения и доступа к значениям __x, __y, соответственно;
+radius - для изменения и доступа к значению __radius.
+
+При изменении значений приватных атрибутов через объекты-свойства нужно проверять, что присваиваемые значения - числа (целые или вещественные). Дополнительно у радиуса проверять, что число должно быть положительным (строго больше нуля). Сделать все эти проверки нужно через магические методы. При некорректных переданных числовых значениях, прежние значения меняться не должны (исключений никаких генерировать при этом не нужно).
+
+Если присваиваемое значение не числовое, то генерировать исключение командой:
+
+raise TypeError("Неверный тип присваиваемых данных.")
+При обращении к несуществующему атрибуту объектов класса Circle выдавать булево значение False.
+
+Пример использования класса (эти строчки в программе писать не нужно):
+"""
+
+class Circle:
+    attrs = {"x":(int, float), "y":(int, float), "radius":(int, float)}
+    def __init__(self, x, y, radius):
+        self.__x = self.__y = self.__radius = None
+        self.x = x
+        self.y = y
+        self.radius = radius
+
+    def __setattr__(self, key, value):
+        if key in self.attrs and type(value) not in self.attrs[key]:
+            raise TypeError("Неверный тип присваиваемых данных.")
+        if key == "radius" and value <=0:
+            return
+        object.__setattr__(self, key, value)
+
+    def __getattr__(self, item):
+        return False
+
+    @property
+    def x (self):
+        return self.__x
+    
+    @x.setter
+    def x(self, value):
+        self.__x = value
+
+    @property
+    def y (self):
+        return self.__y
+    
+    @y.setter
+    def y (self, value):
+        self.__y = value
+
+    @property
+    def radius (self):
+        return self.__radius
+    
+    @radius.setter
+    def radius (self, value):
+        self.__radius = value

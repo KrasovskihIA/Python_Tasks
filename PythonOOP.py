@@ -3126,3 +3126,77 @@ class Calcium:
         if key == "date" and key in self.__dict__:
             return
         object.__setattr__(self, key, value)
+
+
+"""
+Подвиг 2. Объявите класс RandomPassword для генерации случайных паролей. Объекты этого класса должны создаваться командой:
+
+rnd = RandomPassword(psw_chars, min_length, max_length)
+где psw_chars - строка из разрешенных в пароле символов; min_length, max_length - минимальная и максимальная длина генерируемых паролей.
+
+Непосредственная генерация одного пароля должна выполняться командой:
+
+psw = rnd()
+где psw - ссылка на строку длиной в диапазоне [min_length; max_length] из случайно выбранных символов строки psw_chars.
+
+С помощью генератора списка (list comprehension) создайте список lst_pass из трех сгенерированных паролей объектом rnd класса RandomPassword, созданного с параметрами: 
+
+min_length = 5
+max_length = 20
+psw_chars = "qwertyuiopasdfghjklzxcvbnm0123456789!@#$%&*"
+P.S. Выводить на экран ничего не нужно, только создать список из паролей.
+
+P.P.S. Дополнительное домашнее задание: попробуйте реализовать этот же функционал с использованием замыканий функций.
+"""
+from random import randint
+
+class RandomPassword:
+    def __init__(self, psw_chars, min_length, max_length):
+        self.psw_chars = psw_chars
+        self.min_length = min_length
+        self.max_length = max_length
+        
+    def __call__(self, *args, **kwargs):
+        n = randint(self.min_length, self.max_length)
+        len_chars = len(self.psw_chars)
+        return ''.join(self.psw_chars[randint(0, len_chars-1)] for _ in range(n))
+        
+rnd = RandomPassword("qwertyuiopasdfghjklzxcvbnm0123456789!@#$%&*", 5, 20)
+lst_pass = [rnd(), rnd(), rnd()]
+
+
+
+"""
+Подвиг 3. Для последовательной обработки файлов из некоторого списка, например:
+
+filenames = ["boat.jpg", "web.png", "text.txt", "python.doc", "ava.8.jpg", "forest.jpeg", "eq_1.png", "eq_2.png", "my.html", "data.shtml"]
+Необходимо объявить класс ImageFileAcceptor, который бы выделял только файлы с указанными расширениями.
+
+Для этого предполагается создавать объекты класса командой:
+
+acceptor = ImageFileAcceptor(extensions)
+где extensions - кортеж с допустимыми расширениями файлов, например: extensions = ('jpg', 'bmp', 'jpeg').
+
+А, затем, использовать объект acceptor в стандартной функции filter языка Python следующим образом:
+
+image_filenames = filter(acceptor, filenames)
+Пример использования класса (эти строчки в программе писать не нужно):
+"""
+class ImageFileAcceptor:
+    def __init__(self, extensions):
+        self.extensions = extensions
+        
+    def __call__(self, name, *args, **kwargs):
+        start = name.rfind('.')
+        ext = '' if start == -1 else name[start+1:]
+        return ext in self.extensions
+        
+filenames = ["boat.jpg", "web.png", "text.txt", "python.doc", "ava.jpg", "forest.jpeg", "eq_1.png", "eq_2.png"]
+acceptor = ImageFileAcceptor(('jpg', 'bmp', 'jpeg'))
+image_filenames = filter(acceptor, filenames)
+print(list(image_filenames))  # ["boat.jpg", "ava.jpg", "forest.jpeg"]
+
+
+"""
+
+"""

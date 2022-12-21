@@ -3198,5 +3198,66 @@ print(list(image_filenames))  # ["boat.jpg", "ava.jpg", "forest.jpeg"]
 
 
 """
+Вам необходимо в программе объявить классы валидаторов:
+
+LengthValidator - для проверки длины данных в диапазоне [min_length; max_length];
+CharsValidator - для проверки допустимых символов в строке.
+
+Объекты этих классов должны создаваться командами:
+
+lv = LengthValidator(min_length, max_length) # min_length - минимально допустимая длина; max_length - максимально допустимая длина
+cv = CharsValidator(chars) # chars - строка из допустимых символов
+Для проверки корректности данных каждый валидатор должен вызываться как функция:
+
+res = lv(string)
+res = cv(string)
+и возвращать True, если string удовлетворяет условиям валидатора и False - в противном случае.
+
+P.S. В программе следует только объявить два класса валидаторов, на экран выводить ничего не нужно.
+"""
+
+class LengthValidator:
+    def __init__(self, min_length, max_length):
+        self.min_length = min_length
+        self.max_length = max_length
+        
+    def __call__(self, string, *args, **kwargs):
+        return  self.min_length <= len(string) <= self.max_length
+ 
+        
+class CharsValidator:
+    def __init__(self, chars):
+        self.chars = chars
+        
+    def __call__(self, string, *args, **kwargs):
+        return set(string) <= set(self.chars)
+
 
 """
+одвиг 5. Объявите класс DigitRetrieve для преобразования данных из строки в числа. Объекты этого класса создаются командой:
+
+dg = DigitRetrieve()
+Затем, их предполагается использовать, например следующим образом:
+
+d1 = dg("123")   # 123 (целое число)
+d2 = dg("45.54")   # None (не целое число)
+d3 = dg("-56")   # -56 (целое число)
+d4 = dg("12fg")  # None (не целое число)
+d5 = dg("abc")   # None (не целое число)
+То есть, целые числа в строке следует приводить к целочисленному типу данных, а все остальные - к значению None.
+
+С помощью объектов класса DigitRetrieve должно выполняться преобразование чисел из списка строк следующим образом:
+"""
+class DigitRetrieve:
+    def __call__(self, string, *args, **kwargs):
+        if string[0] == "-":
+            if string[1:].isdigit():
+                return int(string)
+        elif string.isdigit():
+                return int(string)
+        else:
+            return None
+
+dg = DigitRetrieve()           
+st = ["123", "abc", "-56.4", "0", "-5"]
+digits = list(map(dg, st))  # [123, None, None, 0, -5]

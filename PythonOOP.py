@@ -3558,3 +3558,49 @@ class Model:
 model = Model()
 model.query(id=1, fio='Sergey', old=33)
 print(model)
+
+
+
+"""
+Подвиг 4. Объявите класс WordString, объекты которого создаются командами:
+
+w1 = WordString()
+w2 = WordString(string)
+где string - передаваемая строка. Например:
+
+words = WordString("Курс по Python ООП")
+Реализовать следующий функционал для объектов этого класса:
+
+len(words) - должно возвращаться число слов в переданной строке (слова разделяются одним или несколькими пробелами);
+words(indx) - должно возвращаться слово по его индексу (indx - порядковый номер слова в строке, начиная с 0).
+
+Также в классе WordString реализовать объект-свойство (property):
+
+string - для передачи и считывания строки.
+"""
+class WordString:
+    def __init__(self, arg=''):
+        self.__word = arg
+        
+    def __len__(self):
+        return len(self.string.split())
+        
+    def __call__(self, indx):
+        x = self.__word.split()
+        return x[indx]
+        
+    @property
+    def string(self):
+        return self.__word
+        
+    @string.setter
+    def string(self, s):
+        self.__word = s
+        
+        
+words = WordString()
+words.string = "Курс по Python ООП"
+n = len(words)
+first = "" if n == 0 else words(0)
+print(words.string)
+print(f"Число слов: {n}; первое слово: {first}")

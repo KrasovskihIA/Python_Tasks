@@ -3724,3 +3724,107 @@ class LinkedList:
     def __call__(self, indx, *args, **kwargs):
         obj = self.__get_obj_by_index(indx)
         return obj.data if obj else None
+
+
+"""
+Подвиг 6. Объявите класс с именем Complex для представления и работы с комплексными числами. Объекты этого класса должны создаваться командой:
+
+cm = Complex(real, img)
+где real - действительная часть комплексного числа (целое или вещественное значение); img - мнимая часть комплексного числа (целое или вещественное значение).
+
+Объявите в этом классе следующие объекты-свойства (property):
+
+real - для записи и считывания действительного значения;
+img - для записи и считывания мнимого значения.
+
+При записи новых значений необходимо проверять тип передаваемых данных. Если тип не соответствует целому или вещественному числу, то генерировать исключение командой:
+
+raise ValueError("Неверный тип данных.")
+Также с объектами класса Complex должна поддерживаться функция:
+
+res = abs(cm)
+возвращающая модуль комплексного числа (вычисляется по формуле: sqrt(real*real + img*img) - корень квадратный от суммы квадратов действительной и мнимой частей комплексного числа).
+
+Создайте объект cmp класса Complex для комплексного числа с real = 7 и img = 8. Затем, через объекты-свойства real и img измените эти значения на real = 3 и img = 4. Вычислите модуль полученного комплексного числа (сохраните результат в переменной c_abs).
+
+P.S. На экран ничего выводить не нужно.
+"""
+
+class Complex:
+    def __init__(self, real, img):
+        self.__real = self.__img = 0
+        self.__real = real
+        self.__img = img
+
+    def __abs__(self):
+        return (self.__real**2 + self.__img**2)**0.5
+
+    @property
+    def real(self):
+        return self.__real
+
+    @real.setter
+    def real(self, value):
+        if type(value) not in (int, float):
+            raise ValueError("Неверный тип данных.")
+        else:
+            self.__real = value
+
+    @property
+    def img(self):
+        return self.__img
+
+    @img.setter
+    def img(self, value):
+        if type(value) not in (int, float):
+            raise ValueError("Неверный тип данных.")
+        else:
+            self.__img = value
+
+cmp = Complex(7, 8)
+cmp.real = 3
+cmp.img = 4
+c_ads = abs(cmp)
+
+"""
+Подвиг 7. Объявите класс с именем RadiusVector для описания и работы с n-мерным вектором (у которого n координат). Объекты этого класса должны создаваться командами:
+
+# создание 5-мерного радиус-вектора с нулевыми значениями координат (аргумент - целое число больше 1)
+vector = RadiusVector(5)  # координаты: 0, 0, 0, 0, 0
+
+# создание 4-мерного радиус-вектора с координатами: 1, -5, 3.4, 10 (координаты - любые целые или вещественные числа)
+vector = RadiusVector(1, -5, 3.4, 10)
+То есть, при передаче одного значения, оно интерпретируется, как размерность нулевого радиус-вектора. Если же передается более одного числового аргумента, то они интерпретируются, как координаты радиус-вектора.
+
+Класс RadiusVector должен содержать методы:
+
+set_coords(coord_1, coord_2, ..., coord_N) - для изменения координат радиус-вектора;
+get_coords() - для получения текущих координат радиус-вектора (в виде кортежа).
+
+Также с объектами класса RadiusVector должны поддерживаться следующие функции:
+
+len(vector) - возвращает число координат радиус-вектора (его размерность);
+abs(vector) - возвращает длину радиус-вектора (вычисляется как: sqrt(coord_1*coord_1 + coord_2*coord_2 + ... + coord_N*coord_N) - корень квадратный из суммы квадратов координат).
+"""
+class RadiusVector:
+    def __init__(self, arg1, *args):
+        if len(args) == 0:
+            self.__coords = [0] * arg1
+        else:
+            self.__coords = [arg1] + list(args)
+
+    def set_coords(self, *args):
+        n = min(len(args), len(self.__coords))
+        self.__coords[:n] = args[:n]
+
+    def get_coords(self):
+        return tuple(self.__coords)
+
+    def __len__(self):
+        return len(self.__coords)
+
+    def __abs__(self):
+        return sum(map(lambda x: x**2, self.__coords))**0.5
+
+
+

@@ -3828,3 +3828,166 @@ class RadiusVector:
 
 
 
+"""
+Подвиг 8. Объявите класс DeltaClock для вычисления разницы времен. Объекты этого класса должны создаваться командой:
+
+dt = DeltaClock(clock1, clock2)
+где clock1, clock2 - объекты другого класса Clock для хранения текущего времени. Эти объекты должны создаваться командой:
+
+clock = Clock(hours, minutes, seconds)
+где hours, minutes, seconds - часы, минуты, секунды (целые неотрицательные числа).
+
+В классе Clock также должен быть (по крайней мере) один метод (возможны и другие):
+
+get_time() - возвращает текущее время в секундах (то есть, значение hours * 3600 + minutes * 60 + seconds).
+
+После создания объекта dt класса DeltaClock, с ним должны выполняться команды:
+
+str_dt = str(dt)   # возвращает строку разницы времен clock1 - clock2 в формате: часы: минуты: секунды
+len_dt = len(dt)   # разницу времен clock1 - clock2 в секундах (целое число)
+print(dt)   # отображает строку разницы времен clock1 - clock2 в формате: часы: минуты: секунды
+Если разность получается отрицательной, то разницу времен считать нулевой.
+
+Пример использования классов (эти строчки в программе писать не нужно):
+
+dt = DeltaClock(Clock(2, 45, 0), Clock(1, 15, 0))
+print(dt) # 01: 30: 00
+len_dt = len(dt) # 5400
+Обратите внимание, добавляется незначащий ноль, если число меньше 10.
+
+P.S. На экран ничего выводить не нужно, только объявить классы.
+"""
+
+class Clock:
+    def __init__(self, hours, minutes, seconds):
+        self.hours = hours
+        self.minutes = minutes
+        self.seconds = seconds
+
+    def get_time(self):
+        return  self.hours * 3600 + self.minutes * 60 + self.seconds
+
+class DeltaClock:
+    def __init__(self, clock1, clock2):
+        self.clock1 = clock1
+        self.clock2 = clock2
+
+    def __str__(self):
+        d = self.__len__()
+        h = d // 3600
+        m  = d % 3600 // 60
+        s = d % 3600 % 60
+        return f"{h:02}: {m:02}: {s:02}"
+
+    def __len__(self):
+        resul = self.clock1.get_time() - self.clock2.get_time()
+        return resul if resul > 0 else 0
+        
+dt = DeltaClock(Clock(2, 45, 0), Clock(1, 15, 0))
+print(dt) # 01: 30: 00
+len_dt = len(dt) # 5400 
+
+
+
+"""
+Подвиг 9. Объявите класс Recipe для представления рецептов. Отдельные ингредиенты рецепта должны определяться классом Ingredient. Объекты этих классов должны создаваться командами:
+
+ing = Ingredient(name, volume, measure)
+recipe = Recipe()
+recipe = Recipe(ing_1, ing_2,..., ing_N)
+где ing_1, ing_2,..., ing_N - объекты класса Ingredient.
+
+В каждом объекте класса Ingredient должны создаваться локальные атрибуты:
+
+name - название ингредиента (строка);
+volume - объем ингредиента в рецепте (вещественное число);
+measure - единица измерения объема ингредиента (строка), например, литр, чайная ложка, грамм, штук и т.д.;
+
+С объектами класса Ingredient должна работать функция:
+
+str(ing)  # название: объем, ед. изм.
+и возвращать строковое представление объекта в формате:
+
+"название: объем, ед. изм."
+
+Например:
+
+ing = Ingredient("Соль", 1, "столовая ложка")
+s = str(ing) # Соль: 1, столовая ложка
+Класс Recipe должен иметь следующие методы:
+
+add_ingredient(ing) - добавление нового ингредиента ing (объект класса Ingredient) в рецепт (в конец);
+remove_ingredient(ing) - удаление ингредиента по объекту ing (объект класса Ingredient) из рецепта;
+get_ingredients() - получение кортежа из объектов класса Ingredient текущего рецепта.
+
+Также с объектами класса Recipe должна поддерживаться функция:
+
+len(recipe) - возвращает число ингредиентов в рецепте.
+
+Пример использования классов (эти строчки в программе писать не нужно):
+"""
+
+class Ingredient:
+    def __init__(self, name, volume, measure):
+        self.name = name
+        self.volume = volume
+        self.measure = measure
+
+    def __str__(self):
+        return f"{self.name}: {self.volume}, {self.measure}"
+
+class Recipe:
+    def __init__(self, *args):
+        self.menu = list(args)
+
+    
+    def add_ingredient(self, ing):
+        self.menu.append(ing)
+
+    def remove_ingredient(self, ing):
+        self.menu.remove(ing)
+    
+    def get_ingredients(self):
+        return tuple(self.menu)
+
+    def __len__(self):
+        return len(self.menu)
+
+recipe = Recipe()
+recipe.add_ingredient(Ingredient("Соль", 1, "столовая ложка"))
+recipe.add_ingredient(Ingredient("Мука", 1, "кг"))
+recipe.add_ingredient(Ingredient("Мясо баранины", 10, "кг"))
+ings = recipe.get_ingredients()
+n = len(recipe) # n = 3
+
+
+"""
+Подвиг 10 (на повторение). Объявите класс PolyLine (полилиния) для представления линии из последовательности прямолинейных сегментов. Объекты этого класса должны создаваться командой:
+
+poly = PolyLine(start_coord, coord_2, coord_3, ..., coord_N)
+Здесь start_coord - координата начала полилинии (кортеж из двух чисел x, y); coord_2, coord_3, ... - последующие координаты точек на плоскости (представленные кортежами), соединенных прямыми линиями.
+
+Например:
+
+poly = PolyLine((1, 2), (3, 5), (0, 10), (-1, 8))
+
+
+В классе PolyLine должны быть объявлены следующие методы:
+
+add_coord(x, y) - добавление новой координаты (в конец);
+remove_coord(indx) - удаление координаты по индексу (порядковому номеру, начинается с нуля);
+get_coords() - получение списка координат (в виде списка из кортежей).
+"""
+
+class PolyLine:
+    def __init__(self, start_coord, *args):
+        self.__coords = [start_coord] + list(args)
+
+    def add_coord(self, x, y):
+        self.__coords.append((x, y))
+
+    def remove_coord(self, indx):
+        self.__coords.pop(indx)
+
+    def get_coords(self):
+        return self.__coords

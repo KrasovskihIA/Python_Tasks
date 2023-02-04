@@ -4257,8 +4257,139 @@ class Stack:
 
 
 """
+Подвиг 7. Вам поручается создать программу по учету книг (библиотеку). Для этого необходимо в программе объявить два класса:
+
+Lib - для представления библиотеки в целом;
+Book - для описания отдельной книги.
+
+Объекты класса Book должны создаваться командой:
+
+book = Book(title, author, year)
+где title - заголовок книги (строка); author - автор книги (строка); year - год издания (целое число).
+
+Объекты класса Lib создаются командой:
+
+lib = Lib()
+Каждый объект должен содержать локальный публичный атрибут:
+
+book_list - ссылка на список из книг (объектов класса Book). Изначально список пустой.
+
+Также объекты класса Lib должны работать со следующими операторами:
+
+lib = lib + book # добавление новой книги в библиотеку
+lib += book
+
+lib = lib - book # удаление книги book из библиотеки (удаление происходит по ранее созданному объекту book класса Book)
+lib -= book
+
+lib = lib - indx # удаление книги по ее порядковому номеру (индексу: отсчет начинается с нуля)
+lib -= indx
+При реализации бинарных операторов + и - создавать копии библиотек (объекты класса Lib) не нужно.
+
+Также с объектами класса Lib должна работать функция:
+
+n = len(lib) # n - число книг
+которая возвращает число книг в библиотеке.
+
+P.S. В программе достаточно только объявить классы. На экран ничего выводить не нужно.
+"""
+
+class Book:
+    def __init__(self, title, author, year):
+        self.title = title
+        self.author = author
+        self.year = year
+
+class Lib:
+    def __init__(self, book_list= None):
+        self.book_list  = book_list if book_list and type(book_list) == list else []
+
+    def __add__(self, other):
+        self.book_list.append(other)
+        return self
+
+    def __iadd__(self, other):
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        if type(other) == Book:
+            self.book_list.remove(other)
+            return self
+        if type(other) == int:
+            self.book_list.pop(other)
+            return self
+
+    def __isub__(self, other):
+        return self.__sub__(other)
+
+    def __len__(self):
+        return len(self.book_list)
+
+
+"""
+Подвиг 8. Вам необходимо создать простую программу по учету семейного бюджета. Для этого в программе объявите два класса с именами:
+
+Budget - для управления семейным бюджетом;
+Item - пункт расходов бюджета.
+
+Объекты класса Item должны создаваться командой:
+
+it = Item(name, money)
+где name - название статьи расхода; money - сумма расходов (вещественное или целое число).
+
+Соответственно, в каждом объекте класса Item должны формироваться локальные атрибуты name и money с переданными значениями. Также с объектами класса Item должны выполняться следующие операторы:
+
+s = it1 + it2 # сумма для двух статей расходов
+и в общем случае:
+
+s = it1 + it2 + ... + itN # сумма N статей расходов
+При суммировании оператор + должен возвращать число - вычисленную сумму по атрибутам money соответствующих объектов класса Item.
+
+Объекты класса Budget создаются командой:
+
+my_budget = Budget()
+А сам класс Budget должен иметь следующие методы:
+
+add_item(self, it) - добавление статьи расхода в бюджет (it - объект класса Item);
+remove_item(self, indx) - удаление статьи расхода из бюджета по его порядковому номеру indx (индексу: отсчитывается с нуля);
+get_items(self) - возвращает список всех статей расходов (список из объектов класса Item).
+"""
+class Item:
+    def __init__(self, name, money):
+        self.name = name
+        self.money = money
+
+    def __add__(self, other):
+        return self.money + other.money
+
+    def __radd__(self, other):
+        return other + self.money
+
+class Budget:
+    def __init__(self, lst_item=None):
+        self.lst_item = lst_item if lst_item and type(lst_item) == list else []
+
+    def add_item(self, it):
+        return self.lst_item.append(it)
+
+    def remove_item(self, indx):
+        return self.lst_item.pop(indx)
+
+    def get_items(self):
+        return self.lst_item
+
+my_budget = Budget()
+my_budget.add_item(Item("Курс по Python ООП", 2000))
+my_budget.add_item(Item("Курс по Django", 5000.01))
+my_budget.add_item(Item("Курс по NumPy", 0))
+my_budget.add_item(Item("Курс по C++", 1500.10))
+
+# вычисление общих расходов
+s = 0
+for x in my_budget.get_items():
+    s = s + x
+
 
 """
 
-
-    
+"""

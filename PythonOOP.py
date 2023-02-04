@@ -4391,5 +4391,110 @@ for x in my_budget.get_items():
 
 
 """
+Подвиг 9. Объявите класс Box3D для представления прямоугольного параллелепипеда (бруска), объекты которого создаются командой:
+
+box = Box3D(width, height, depth)
+где width, height, depth - ширина, высота и глубина соответственно (числа: целые или вещественные)
+
+В каждом объекте класса Box3D должны создаваться публичные атрибуты:
+
+width, height, depth - ширина, высота и глубина соответственно.
+
+С объектами класса Box3D должны выполняться следующие операторы:
+
+box1 = Box3D(1, 2, 3)
+box2 = Box3D(2, 4, 6)
+
+box = box1 + box2 # Box3D: width=3, height=6, depth=9 (соответствующие размерности складываются)
+box = box1 * 2    # Box3D: width=2, height=4, depth=6 (каждая размерность умножается на 2)
+box = 3 * box2    # Box3D: width=6, height=12, depth=18
+box = box2 - box1 # Box3D: width=1, height=2, depth=3 (соответствующие размерности вычитаются)
+box = box1 // 2   # Box3D: width=0, height=1, depth=1 (соответствующие размерности целочисленно делятся на 2)
+box = box2 % 3    # Box3D: width=2, height=1, depth=0
+При каждой арифметической операции следует создавать новый объект класса Box3D с соответствующими значениями локальных атрибутов.
+
+P.S. В программе достаточно только объявить класс Box3D. На экран ничего выводить не нужно.
+"""
+
+class Box3D:
+    def __init__(self, width, height, depth):
+        self.width = width
+        self.height = height
+        self.depth = depth
+
+    def __add__(self, other):
+        return Box3D(self.width + other.width, self.height + other.height, self.depth + other.depth)
+
+    def __sub__(self, other):
+        return Box3D(self.width - other.width, self.height - other.height, self.depth - other.depth)
+
+    def __mul__(self, other):
+        return Box3D(self.width * other, self.height * other, self.depth * other)
+
+    def __rmul__(self, other):
+        return Box3D(other * self.width , other * self.height, other * self.depth)
+
+    def __floordiv__(self, other):
+        return Box3D(self.width // other, self.height // other, self.depth // other)
+
+    def __mod__(self, other):
+        return Box3D(self.width % other, self.height % other, self.depth % other)
+
 
 """
+Подвиг 10 (на повторение). В нейронных сетях использую операцию под названием Max Pooling. Суть ее состоит в сканировании прямоугольной таблицы чисел (матрицы) окном определенного размера (обычно, 2x2 элемента) и выбора наибольшего значения в пределах этого окна:
+
+
+
+ Или, если окна выходят за пределы матрицы, то они пропускаются (игнорируются):
+
+
+
+Мы повторим эту процедуру. Для этого в программе нужно объявить класс с именем MaxPooling, объекты которого создаются командой:
+
+mp = MaxPooling(step=(2, 2), size=(2,2))
+где step - шаг смещения окна по горизонтали и вертикали; size - размер окна по горизонтали и вертикали.
+
+Параметры step и size по умолчанию должны принимать кортеж со значениями (2, 2).
+
+Для выполнения операции Max Pooling используется команда:
+
+res = mp(matrix)
+где matrix - прямоугольная таблица чисел; res - ссылка на результат обработки таблицы matrix (должна создаваться новая таблица чисел.
+
+Прямоугольную таблицу чисел следует описывать вложенными списками. Если при сканировании таблицы часть окна выходит за ее пределы, то эти данные отбрасывать (не учитывать все окно).
+
+Если matrix не является прямоугольной таблицей или содержит хотя бы одно не числовое значение, то должно генерироваться исключение командой:
+
+raise ValueError("Неверный формат для первого параметра matrix.")
+"""
+class MaxPooling:
+    def __init__(self, step=(2, 2), size=(2,2)):
+        self.__step = step
+        self.__size = size
+
+    def __call__(self, matrix):
+        rows = len(matrix)
+        cols = len(matrix) if rows > 0 else 0
+
+        if rows == 0:
+            return [[]]
+
+        if not all(map(lambda x:len(x) == cols, matrix)) or \
+                not all(map(lambda row: all(map(lambda x: type(x) in (int, float), row)), matrix)):
+            raise ValueError("Неверный формат для первого параметра matrix.")
+
+        h, w = self.__size[0], self.__size[1]
+        sh, sw = self.__step[0], self.__step[1]
+
+        rows_range  = (rows - h) // sh + 1
+        cols_range = (cols - w) // sw + 1
+
+        res = [[0] * cols_range for _ in range(rows_range)]
+
+        for i in range(rows_range):
+            for j in range(cols_range):
+                s = (x for r in matrix[i * sh: i * sh + h] for x in r[j * sw: j * sw + w])
+                res[i][j] = max(s)
+
+        return res

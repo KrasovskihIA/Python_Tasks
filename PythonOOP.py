@@ -4585,3 +4585,168 @@ track2.add_track(TrackLine(3, 2, 90))
 track2.add_track(TrackLine(10, 8, 90))
 
 res_eq = track1 == track2
+
+
+"""
+Подвиг 4. Объявите класс Dimensions (габариты) с атрибутами:
+
+MIN_DIMENSION = 10
+MAX_DIMENSION = 10000
+Каждый объект класса Dimensions должен создаваться командой:
+
+d3 = Dimensions(a, b, c)   # a, b, c - габаритные размеры
+Значения a, b, c должны сохраняться в локальных приватных атрибутах __a, __b, __c объектах этого класса.
+
+Для изменения и доступа к приватным атрибутам в классе Dimensions должны быть объявлены объекты-свойства (property) с именами: a, b, c. Причем, в момент присваивания нового значения должна выполняться проверка попадания числа в диапазон [MIN_DIMENSION; MAX_DIMENSION]. Если число не попадает, то оно игнорируется и существующее значение не меняется.
+
+С объектами класса Dimensions должны выполняться следующие операторы сравнения:
+
+dim1 >= dim2   # True, если объем dim1 больше или равен объему dim2
+dim1 > dim2    # True, если объем dim1 больше объема dim2
+dim1 <= dim2   # True, если объем dim1 меньше или равен объему dim2
+dim1 < dim2    # True, если объем dim1 меньше объема dim2
+Объявите в программе еще один класс с именем ShopItem (товар), объекты которого создаются командой:
+
+item = ShopItem(name, price, dim)
+где name - название товара (строка); price - цена товара (целое или вещественное число); dim - габариты товара (объект класса Dimensions).
+
+В каждом объекте класса ShopItem должны создаваться локальные атрибуты:
+
+name - название товара;
+price - цена товара;
+dim - габариты товара (объект класса Dimensions).
+
+Создайте список с именем lst_shop из четырех товаров со следующими данными:
+
+- кеды; 1024; (40, 30, 120)
+- зонт; 500.24; (10, 20, 50)
+- холодильник; 40000; (2000, 600, 500)
+- табуретка; 2000.99; (500, 200, 200)
+
+Сформируйте новый список lst_shop_sorted с упорядоченными по возрастанию объема (габаритов) товаров списка lst_shop, используя стандартную функцию sorted() языка Python и ее параметр key для настройки сортировки. Прежний список lst_shop должен оставаться без изменений.
+
+P.S. На экран в программе ничего выводить не нужно.
+"""
+class Dimensions:
+    MIN_DIMENSION = 10
+    MAX_DIMENSION = 10000
+
+    def __init__(self, a, b, c):
+        self.__a = a
+        self.__b = b
+        self.__c = c
+
+    @classmethod
+    def __verife_value(cls, value):
+        return cls.MIN_DIMENSION < value < cls.MAX_DIMENSION
+
+    @property
+    def a(self):
+        return self.__a   
+    @a.setter
+    def a(self, value):
+        if self.__verife_value(value):
+            self.__a = value
+
+    @property
+    def b(self):
+        return self.__b   
+    @b.setter
+    def b(self, value):
+        if self.__verife_value(value):
+            self.__b = value
+
+    @property
+    def c(self):
+        return self.__c   
+    @c.setter
+    def c(self, value):
+        if self.__verife_value(value):
+            self.__c = value
+
+    def __lt__(self, other):
+        return (self.__a * self.__b * self.__c) < (other.__a * other.__b * other.__c)
+
+    def __gt__(self, other):
+        return (self.__a * self.__b * self.__c) > (other.__a * other.__b * other.__c)
+
+    def __le__(self, other):
+        return (self.__a * self.__b * self.__c) <= (other.__a * other.__b * other.__c)
+
+    def __ge__(self, other):
+        return (self.__a * self.__b * self.__c) >= (other.__a * other.__b * other.__c)
+        
+
+class ShopItem:
+    def __init__(self, name, price, dim):
+        self.name = name
+        self.price = price
+        self.dim = dim
+
+
+lst_shop = [ShopItem('кеды', 1024, Dimensions(40, 30, 120)),
+            ShopItem('зонт', 500.24, Dimensions(10, 20, 50)),
+            ShopItem('холодильник', 40000, Dimensions(2000, 600, 500)),
+            ShopItem('табуретка', 2000.99, Dimensions(500, 200, 200))]
+
+lst_shop_sorted = sorted(lst_shop, key=lambda x: x.dim)
+
+
+"""
+Подвиг 5. Имеется стихотворение, представленное следующим списком строк:
+
+stich = ["Я к вам пишу – чего же боле?",
+        "Что я могу еще сказать?",
+        "Теперь, я знаю, в вашей воле",
+        "Меня презреньем наказать.",
+        "Но вы, к моей несчастной доле",
+        "Хоть каплю жалости храня,",
+        "Вы не оставите меня."]
+Необходимо в каждой строчке этого стиха убрать символы "–?!,.;" в начале и в конце каждого слова и разбить строку по словам (слова разделяются одним или несколькими пробелами). На основе полученного списка слов, создать объект класса StringText командой:
+
+st = StringText(lst_words)
+где lst_words - список из слов одной строчки стихотворения. 
+
+С объектами класса StringText должны быть реализованы операторы сравнения:
+
+st1 > st2   # True, если число слов в st1 больше, чем в st2
+st1 >= st2  # True, если число слов в st1 больше или равно st2
+st1 < st2   # True, если число слов в st1 меньше, чем в st2
+st1 <= st2  # True, если число слов в st1 меньше или равно st2
+Все объекты класса StringText (для каждой строчки стихотворения) сохранить в списке lst_text. Затем, сформировать новый список lst_text_sorted из отсортированных объектов класса StringText по убыванию числа слов. Для сортировки использовать стандартную функцию sorted() языка Python. После этого преобразовать данный список (lst_text_sorted) в список из строк (объекты заменяются на соответствующие строки, между словами ставится пробел).
+
+P.S. На экран в программе ничего выводить не нужно.
+"""
+stich = ["Я к вам пишу – чего же боле?",
+        "Что я могу еще сказать?",
+        "Теперь, я знаю, в вашей воле",
+        "Меня презреньем наказать.",
+        "Но вы, к моей несчастной доле",
+        "Хоть каплю жалости храня,",
+        "Вы не оставите меня."]
+
+
+class StringText:
+    def __init__(self, lst):
+        self.lst_words = list(lst)
+
+    def __len__(self):
+        return len(self.lst_words)
+
+    def __lt__(self, other):
+        return len(self) < len(other)
+
+    def __le__(self, other):
+        return len(self) <= len(other)
+
+
+strip_chars = "–?!,.;"
+lst_text = [StringText(x.strip(strip_chars) for x in line.split() if len(x.strip(strip_chars)) > 0) for line in stich]
+
+lst_text_sorted = sorted(lst_text, reverse=True)
+lst_text_sorted = [" ".join(x.lst_words) for x in lst_text_sorted]
+
+    
+"""
+
+"""

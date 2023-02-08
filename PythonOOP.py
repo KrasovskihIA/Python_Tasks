@@ -4789,41 +4789,32 @@ text = input()
 """
 class Morph:
     def __init__(self, *args):
-        self.list_word = [x.lower() for x in list(args)]
+        self._words = list(map(lambda x: x.strip(" ?!:;,.").lower(), args))
 
     def add_word(self, word):
-        self.list_word.append(word.lower())
+        w = word.lower()
+        if w not in self._words:
+            self._words.append(w)
 
     def get_words(self):
-        return tuple(self.list_word)
+        return tuple(self._words)
 
     def __eq__(self, value):
-        if value.lower() in self.list_word:
-            return True
-        else:
-            return False
-
-    def __req__(self, value):
-        return self.__eq__(value)
-
-    def __ne__(self, value):
-        if value.lower() not in self.list_word:
-            return True
-        else:
-            return False
-
-    def __rne__(self, value):
-        return self.__eq__(value) 
+        if type(value) != str:
+            raise ValueError("Error")
+        return value.lower() in self._words
 
 
-mw2 = Morph("связь", "связи", "связью", "связей", "связям", "связями", "связях","формула", "формулы", "формуле", "формулу", "формулой", "формул", "формулам", "формулами", "формулах",
-        "вектор", "вектора", "вектору", "вектором", "векторе", "векторы", "векторов", "векторам", "векторами", "векторах",
-        "эффект", "эффекта", "эффекту", "эффектом", "эффекте", "эффекты", "эффектов", "эффектам", "эффектами", "эффектах",
-        "день", "дня", "дню", "днем", "дне", "дни", "дням", "днями", "днях")
+text = input()
 
-text = str(input()).split()
-score = 0
-for x in text:
-    if x in: mw2
-        score +=1
-print (score)
+dict_words = [Morph('связь', 'связи', 'связью', 'связей', 'связям', 'связями', 'связях'),
+              Morph('формула', 'формулы, формуле', 'формулу', 'формулой', 'формул', 'формулам', 'формулами', 'формулах'),
+              Morph('вектор', 'вектора', 'вектору', 'вектором', 'векторе', 'векторы', 'векторов', 'векторам', 'векторами', 'векторах'),
+              Morph('эффект', 'эффекта', 'эффекту', 'эффектом', 'эффекте', 'эффекты', 'эффектов', 'эффектам', 'эффектами', 'эффектах'),
+              Morph('день', 'дня, дню', 'днем', 'дне', 'дни', 'дням', 'днями', 'днях')
+] 
+
+
+words = map(lambda x: x.strip("?!:;,.").lower(), text.split())
+res = sum(word == morph for word in words for morph in dict_words)
+print (res)

@@ -157,3 +157,59 @@ class Body:
             return self.massa == other.massa
         else:
             return self.massa == other
+
+
+"""
+Объявите в программе класс с именем Box (ящик), объекты которого должны создаваться командой:
+
+box = Box()
+А сам класс иметь следующие методы:
+
+add_thing(self, obj) - добавление предмета obj (объект другого класса Thing) в ящик;
+get_things(self) - получение списка объектов ящика.
+
+Для описания предметов необходимо объявить еще один класс Thing. Объекты этого класса должны создаваться командой:
+
+obj = Thing(name, mass)
+где name - название предмета (строка); mass - масса предмета (число: целое или вещественное).
+Объекты класса Thing должны поддерживать операторы сравнения:
+
+obj1 == obj2
+obj1 != obj2
+Предметы считаются равными, если у них одинаковые названия name (без учета регистра) и массы mass.
+
+Также объекты класса Box должны поддерживать аналогичные операторы сравнения:
+
+box1 == box2
+box1 != box2
+Ящики считаются равными, если одинаковы их содержимое (для каждого объекта класса Thing одного ящика и можно найти ровно один равный объект из второго ящика).
+"""
+class Box:
+    def __init__(self):
+        self.list_box = []
+
+    def add_thing(self, obj):
+        self.list_box.append(obj)
+
+    def get_things(self):
+        return self.list_box
+
+    def __eq__(self, other: 'Box') -> bool:
+        count = 0
+        for b1 in self.list_box:
+            for b2 in other.list_box:
+                if b1.name == b2.name and b1.mass == b2.mass:
+                    count += 1
+        if count == len(self.list_box) and count == len(other.list_box):
+            return True
+        else:
+            return False
+
+
+class Thing:
+    def __init__(self, name, mass):
+        self.name = name
+        self.mass = mass
+
+    def __eq__(self, other):
+        return (self.name.lower() == other.name.lower()) and (self.mass == other.mass)

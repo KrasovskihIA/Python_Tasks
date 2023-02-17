@@ -304,3 +304,87 @@ for i in lst_in:
     else:
         shop_items[item] = [item, total]
     
+
+"""
+Подвиг 7. Объявите класс с именем DataBase (база данных - БД), объекты которого создаются командой:
+
+db = DataBase(path)
+где path - путь к файлу с данными БД (строка).
+
+Также в классе DataBase нужно объявить следующие методы:
+
+write(self, record) - для добавления новой записи в БД, представленной объектом record;
+read(self, pk) - чтение записи из БД (возвращает объект Record) по ее уникальному идентификатору pk (уникальное целое положительное число); запись ищется в значениях словаря (см. ниже)
+
+Каждая запись БД должна описываться классом Record, а объекты этого класса создаваться командой:
+
+record = Record(fio, descr, old)
+где fio - ФИО некоторого человека (строка); descr - характеристика человека (строка); old - возраст человека (целое число).
+
+В каждом объекте класса Record должны формироваться следующие локальные атрибуты:
+
+pk - уникальный идентификатор записи (число: целое, положительное); формируется автоматически при создании каждого нового объекта;
+fio - ФИО человека (строка);
+descr - характеристика человека (строка);
+old - возраст человека (целое число).
+
+Реализовать для объектов класса Record вычисление хэша по атрибутам: fio и old (без учета регистра). Если они одинаковы для разных записей, то и хэши должны получаться равными. Также для объектов класса Record  с одинаковыми хэшами оператор == должен выдавать значение True, а с разными хэшами - False.
+
+Хранить записи в БД следует в виде словаря dict_db (атрибут объекта db класса DataBase), ключами которого являются объекты класса Record, а значениями список из объектов с равными хэшами:
+
+dict_db[rec1] = [rec1, rec2, ..., recN]
+
+где rec1, rec2, ..., recN - объекты класса Record с одинаковыми хэшами.
+
+Для наполнения БД прочитайте строки из входного потока с помощью команды:
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+где каждая строка представлена в формате:
+
+"ФИО; характеристика; возраст"
+"""
+import sys
+
+class DataBase:
+    def __init__(self, path):
+        self.path = path
+        self.dict_db = {}
+
+    def write(self, record):
+        self.dict_db.setdefault(record, [])
+        self.dict_db[record].append(record)
+
+    def read(self, pk):
+        r = (x for row in self.dict_db.values() for x in row)
+        obj = tuple(filter(lambda x: x.pk == pk, r))
+        return obj[0] if len(obj) > 0 else None
+
+
+class Record:
+    record_count = 0
+
+    def __init__(self, fio, descr, old):
+        self.fio = fio
+        self.descr = descr
+        self.old = old
+        self.pk = self.__count()
+
+    @classmethod
+    def __count(cls):
+        cls.record_count += 1
+        return cls.record_count
+
+    def __hash__(self):
+        return hash((self.fio.lower(), self.old))
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+
+db = DataBase("database.db")
+for i in lst_in:
+    args = list(map(str.strip, i.split(';')))
+    args[-1] = int(args[-1])
+    db.write(Record(*args))

@@ -550,3 +550,155 @@ class Triangle:
 
         p = 0.5 * (a + b + c)
         return (p * (p-a) * (p-b) * (p-c))**0.5
+
+"""
+Подвиг 4. Объявите в программе класс Player (игрок), объекты которого создаются командой:
+
+player = Player(name, old, score)
+где name - имя игрока (строка); old - возраст игрока (целое число); score - набранные очки в игре (целое число). В каждом объекте класса Player должны создаваться аналогичные локальные атрибуты: name, old, score.
+
+С объектами класса Player должна работать функция:
+
+bool(player)
+которая возвращает True, если число очков больше нуля, и False - в противном случае.
+
+С помощью команды:
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+считываются строки из входного потока в список строк lst_in. Каждая строка записана в формате:
+
+"имя; возраст; очки"
+
+Например:
+
+Балакирев; 34; 2048
+Mediel; 27; 0
+Влад; 18; 9012
+Nina P; 33; 0
+
+Каждую строку списка lst_in необходимо представить в виде объекта класса Player с соответствующими данными. И из этих объектов сформировать список players.
+
+Отфильтруйте этот список (создайте новый: players_filtered), оставив всех игроков с числом очков больше нуля. Используйте для этого стандартную функцию filter() совместно с функцией bool() языка Python. 
+
+P.S. На экран ничего выводить не нужно.
+"""
+import sys
+
+class Player:
+    def __init__(self, name, old, score):
+        self.name = name
+        self.old = old
+        self.score = int(score)
+
+    def __bool__(self):
+        return self.score > 0 
+
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+players = list(map(lambda x: Player(*x.split('; ')), lst_in))
+
+for x in players:
+    if not bool(x):
+        players.remove(x)
+
+players_filtered = list(filter(bool, players))
+
+"""
+Подвиг 5. Объявите в программе класс MailBox (почтовый ящик), объекты которого создаются командой:
+
+mail = MailBox()
+Каждый объект этого класса должен содержать локальный публичный атрибут:
+
+inbox_list - список из принятых писем.
+
+Также в классе MailBox должен присутствовать метод:
+
+receive(self) - прием новых писем
+
+Этот метод должен читать данные из входного потока командой:
+
+lst_in = list(map(str.strip, sys.stdin.readlines()))
+В результате формируется список lst_in из строк. Каждая строка записана в формате:
+
+"от кого; заголовок; текст письма"
+
+Например:
+
+sc_lib@list.ru; От Балакирева; Успехов в IT!
+mail@list.ru; Выгодное предложение; Вам одобрен кредит.
+mail123@list.ru; Розыгрыш; Вы выиграли 1 млн. руб. Переведите 30 тыс. руб., чтобы его получить.
+
+Каждая строчка списка lst_in должна быть представлена объектом класса MailItem, объекты которого создаются командой:
+
+item = MailItem(mail_from, title, content)
+где mail_from - email отправителя (строка); title - заголовок письма (строка), content - содержимое письма (строка). В каждом объекте класса MailItem должны формироваться соответствующие локальные атрибуты (с именами: mail_from, title, content). И дополнительно атрибут is_read (прочитано ли) с начальным значением False.
+
+В классе MailItem должен быть реализован метод:
+
+set_read(self, fl_read) - для отметки, что письмо прочитано (метод должен устанавливать атрибут is_read = fl_read, если True, то письмо прочитано, если False, то не прочитано).
+
+С каждым объектом класса MailItem должна работать функция:
+
+bool(item)
+которая возвращает True для прочитанного письма и False для непрочитанного.
+
+Вызовите метод:
+
+mail.receive()
+Отметьте первое и последнее письмо в списке mail.inbox_list, как прочитанное (используйте для этого метод set_read). Затем, сформируйте в программе список (глобальный) с именем inbox_list_filtered из прочитанных писем, используя стандартную функцию filter() совместно с функцией bool() языка Python.
+
+P.S. На экран ничего выводить не нужно.
+
+
+"""
+import sys
+
+class MailBox:
+    def __init__(self):
+        self.inbox_list = []
+
+    def receive(self):
+        lst_in = list(map(str.strip, sys.stdin.readlines()))
+        self.inbox_list = list(map(lambda x: MailItem(*x.split('; ')), lst_in))
+
+class MailItem:
+    def __init__(self, mail_from, title, content):
+        self.mail_from = mail_from
+        self.title = title
+        self.content = content
+        self.is_read = False
+
+    def set_read(self, fl_read):
+            self.is_read = fl_read
+
+    def __bool__(self):
+        return self.is_read == True
+
+mail = MailBox()
+mail.receive()
+mail.inbox_list[0].set_read(True)
+mail.inbox_list[-1].set_read(True)
+inbox_list_filtered = list(filter(bool, mail.inbox_list))
+
+"""
+Объявите класс Line, объекты которого создаются командой:
+
+line = Line(x1, y1, x2, y2)
+где x1, y1, x2, y2 - координаты начала линии (x1, y1) и координаты конца линии (x2, y2). Могут быть произвольными числами. В объектах класса Line должны создаваться соответствующие локальные атрибуты с именами x1, y1, x2, y2.
+
+В классе Line определить магический метод __len__() так, чтобы функция:
+
+bool(line)
+возвращала False, если длина линии меньше 1.
+
+P.S. На экран ничего выводить не нужно. Только объявить класс.
+"""
+class Line:
+    def __init__(self, x1, y1, x2, y2):
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+
+    def __len__(self):
+        return ((self.x2 - self.x1)^2 + (self.y2 - self.y1)^2)**0.5 > 1

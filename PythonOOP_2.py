@@ -702,3 +702,132 @@ class Line:
 
     def __len__(self):
         return ((self.x2 - self.x1)^2 + (self.y2 - self.y1)^2)**0.5 > 1
+
+
+"""
+Подвиг 7. Объявите класс Ellipse (эллипс), объекты которого создаются командами:
+
+el1 = Ellipse()  # без создания локальных атрибутов x1, y1, x2, y2
+el2 = Ellipse(x1, y1, x2, y2)
+где x1, y1 - координаты (числа) левого верхнего угла; x2, y2 - координаты (числа) нижнего правого угла. Первая команда создает объект класса Ellipse без локальных атрибутов x1, y1, x2, y2. Вторая команда создает объект с локальными атрибутами x1, y1, x2, y2 и соответствующими переданными значениями.
+
+В классе Ellipse объявите магический метод __bool__(), который бы возвращал True, если все локальные атрибуты x1, y1, x2, y2 существуют и False - в противном случае.
+
+Также в классе Ellipse нужно реализовать метод:
+
+get_coords() - для получения кортежа текущих координат объекта.
+
+Если координаты отсутствуют (нет локальных атрибутов x1, y1, x2, y2), то метод get_coords() должен генерировать исключение командой:
+
+raise AttributeError('нет координат для извлечения')
+Сформируйте в программе список с именем lst_geom, содержащий четыре объекта класса Ellipse. Два объекта должны быть созданы командой 
+
+Ellipse()
+и еще два - командой:
+
+Ellipse(x1, y1, x2, y2)
+Переберите список в цикле и вызовите метод get_coords() только для объектов, имеющих координаты x1, y1, x2, y2. (Помните, что для этого был определен магический метод __bool__()).
+
+P.S. На экран ничего выводить не нужно.
+"""
+class Ellipse:
+    def __init__(self, x1=None, y1=None, x2=None, y2=None):
+        if x1 != None:
+            self.x1 = x1
+        if y1 != None:
+            self.y1 = y1
+        if x2 != None:
+            self.x2 = x2
+        if y2 != None:
+            self.y2 = y2
+
+    def __bool__(self):
+        return len(self.__dict__) == 4
+
+    def get_coords(self):
+        if bool(self):
+            return (self.x1, self.y1, self.x2, self.y2)
+        else:
+            raise AttributeError('нет координат для извлечения')
+
+lst_geom = [Ellipse(), Ellipse(), Ellipse(1, 1, 2, 2), Ellipse(1, 1, 2, 2)]
+for i in lst_geom:
+    if i:
+        i.get_coords()
+
+"""
+Объявите в программе класс Vector, объекты которого создаются командой:
+
+v = Vector(x1, x2, x3,..., xN)
+где x1, x2, x3,..., xN - координаты вектора (числа: целые или вещественные).
+
+С каждым объектом класса Vector должны выполняться операторы:
+
+v1 + v2 # суммирование соответствующих координат векторов
+v1 - v2 # вычитание соответствующих координат векторов
+v1 * v2 # умножение соответствующих координат векторов
+
+v1 += 10 # прибавление ко всем координатам вектора числа 10
+v1 -= 10 # вычитание из всех координат вектора числа 10
+v1 += v2
+v2 -= v1
+
+v1 == v2 # True, если соответствующие координаты векторов равны
+v1 != v2 # True, если хотя бы одна пара координат векторов не совпадает
+При реализации бинарных операторов +, -, * следует создавать новые объекты класса Vector с новыми (вычисленными) координатами. При реализации операторов +=, -= координаты меняются в текущем объекте, не создавая новый.
+
+Если число координат (размерность) векторов v1 и v2 не совпадает, то при операторах +, -, * должно генерироваться исключение командой:
+
+raise ArithmeticError('размерности векторов не совпадают')
+P.S. В программе на экран выводить ничего не нужно, только объявить класс.
+"""
+import numpy
+
+class Vector:
+    def __init__(self, *args, **kwargs):
+        self.points = args
+        
+    def check_vector(func):
+        def wrapper(self, vector, *args, **kwargs):
+            if not (type(vector) in (int, float)):
+                if len(vector.points) != len(self.points):
+                    raise ArithmeticError('размерности векторов не совпадают')
+            return func(self, vector)
+        return wrapper
+    
+    @check_vector    
+    def __add__(self, other):
+        return Vector(*[i + y for i, y in zip(self.points, other.points)])
+    
+    @check_vector
+    def __sub__(self, other):
+        return Vector(*[i - y for i, y in zip(self.points, other.points)])
+    
+    @check_vector
+    def __mul__(self, other):
+        return Vector(*[i * y for i, y in zip(self.points, other.points)])
+    
+    @check_vector
+    def __iadd__(self, other):
+        if type(other) in (int, float):
+            self.points = tuple(numpy.array(self.points) + other)
+        else:
+            self.points = tuple(numpy.array(self.points) + numpy.array(other.points))
+        return self
+            
+    @check_vector
+    def __isub__(self, other):
+        if type(other) in (int, float):
+            self.points = tuple(numpy.array(self.points) - other)
+        else:
+            self.points = tuple(numpy.array(self.points) - numpy.array(other.points))
+        return self
+    
+    def __eq__(self, other):
+        return self and other and self.points == other.points
+    
+    def __ne__(self, other):
+        return self and other and self.points != other.points
+    
+    def __len__(self):
+        return len(self.points)

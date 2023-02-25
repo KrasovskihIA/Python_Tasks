@@ -1056,3 +1056,29 @@ class TableValues:
 
     def __setitem__(self, key, value):
         self.cells[key[0]][key[1]].value = value
+
+
+"""
+Подвиг 7 (познание срезов). Объявите в программе класс с именем RadiusVector (радиус-вектор), объекты которого создаются командой:
+
+v = RadiusVector(x1, x2,..., xN)
+где x1, x2,..., xN - координаты радиус-вектора (числа: целые или вещественные).
+
+В каждом объекте класса RadiusVector должен быть локальный атрибут:
+
+coords - список из координат радиус-вектора.
+P.S. При передаче среза в магических методах __setitem__() и __getitem__() параметр индекса становится объектом класса slice. Его можно указывать непосредственно в квадратных скобках упорядоченных коллекций (списков, кортежей и т.п.).
+"""
+class RadiusVector:
+    def __init__(self, *args):
+        self.coords = list(args)
+
+    def __getitem__(self, item):
+        return tuple(self.coords[item]) if type(item) == slice else self.coords[item]
+
+    def __setitem__(self, key, value):
+        self.coords[key] = value
+
+"""
+
+"""

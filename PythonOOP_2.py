@@ -1234,5 +1234,126 @@ class Thing:
 
 
 """
+Подвиг 10. Вам необходимо описывать в программе очень большие и разреженные таблицы данных (с большим числом пропусков). Для этого предлагается объявить класс SparseTable, объекты которого создаются командой:
+
+st = SparseTable()
+В каждом объекте этого класса должны создаваться локальные публичные атрибуты:
+
+rows - общее число строк таблицы (начальное значение 0);
+cols - общее число столбцов таблицы (начальное значение 0).
+
+В самом классе SparseTable должны быть объявлены методы:
+
+add_data(row, col, data) - добавление данных data (объект класса Cell) в таблицу по индексам row, col (целые неотрицательные числа);
+remove_data(row, col) - удаление ячейки (объект класса Cell) с индексами (row, col).
+
+При удалении/добавлении новой ячейки должны автоматически пересчитываться атрибуты rows, cols объекта класса SparseTable. Если происходит попытка удалить несуществующую ячейку, то должно генерироваться исключение:
+
+raise IndexError('ячейка с указанными индексами не существует')
+Ячейки таблицы представляют собой объекты класса Cell, которые создаются командой:
+
+data = Cell(value)
+где value - данные ячейки (любой тип).
+
+Хранить ячейки следует в словаре, ключами которого являются индексы (кортеж) i, j, а значениями - объекты класса Cell.
+
+Также с объектами класса SparseTable должны выполняться команды:
+
+res = st[i, j] # получение данных из таблицы по индексам (i, j)
+st[i, j] = value # запись новых данных по индексам (i, j)
+Чтение данных возможно только для существующих ячеек. Если ячейки с указанными индексами нет, то генерировать исключение командой:
+
+raise ValueError('данные по указанным индексам отсутствуют')
+При записи новых значений их следует менять в существующей ячейке или добавлять новую, если ячейка с индексами (i, j) отсутствует в таблице. (Не забывайте при этом пересчитывать атрибуты rows и cols).
+
+Пример использования классов (эти строчки в программе не писать):
+"""
+class Cell:
+    def __init__(self, value):
+        self.value = value
+
+class SparseTable:
+    def __init__(self):
+        self.tbl = {}
+
+    @property
+    def rows(self):
+        return max(i[0] for i in self.tbl) + 1 if self.tbl else 0
+
+    @property
+    def cols(self):
+        return max(i[1] for i in self.tbl) + 1 if self.tbl else 0
+
+    def add_data(self, row, col, data):
+        self.tbl[row, col] = data
+
+    def remove_data(self, row, col):
+        if not (row, col) in self.tbl:
+            raise IndexError('ячейка с указанными индексами не существует')
+        del self.tbl[row, col]
+
+    def __getitem__(self, key):
+        if not key in self.tbl:
+            raise ValueError('данные по указанным индексам отсутствуют')
+        return self.tbl[key].value
+
+    def __setitem__(self, key, v):
+        self.tbl.setdefault(key, Cell(0)).value = v
+
 
 """
+Подвиг 5. Объявите в программе класс Person, объекты которого создаются командой:
+
+p = Person(fio, job, old, salary, year_job)
+где fio - ФИО сотрудника (строка); job - наименование должности (строка); old - возраст (целое число); salary - зарплата (число: целое или вещественное); year_job - непрерывный стаж на указанном месте работы (целое число).
+
+В каждом объекте класса Person автоматически должны создаваться локальные атрибуты с такими же именами: fio, job, old, salary, year_job и соответствующими значениями.
+
+Также с объектами класса Person должны поддерживаться следующие команды:
+
+data = p[indx] # получение данных по порядковому номеру (indx) атрибута (порядок: fio, job, old, salary, year_job и начинается с нуля)
+p[indx] = value # запись в поле с указанным индексом (indx) нового значения value
+for v in p: # перебор всех атрибутов объекта в порядке: fio, job, old, salary, year_job
+    print(v)
+При работе с индексами, проверить корректность значения indx. Оно должно быть целым числом в диапазоне [0; 4]. Иначе, генерировать исключение командой:
+
+raise IndexError('неверный индекс')
+"""
+
+class Person:
+    def __init__(self, fio, job, old, salary, year_job):
+        self.fio = fio
+        self.job = job
+        self.old = old
+        self.salary = salary
+        self.year_job = year_job
+        self._attrs = tuple(self.__dict__)
+        self._len_attrs = len(self._attrs)
+        self._iter_index = -1
+
+
+    def __chech(self, value):
+        if type(value) != int or not (-self._len_attrs <= value < self._len_attrs):
+            raise IndexError('неверный индекс')
+
+
+    def __getitem__(self, item):
+            self.__chech(item)
+            return getattr(self, self._attrs[item])
+
+
+    def __setitem__(self, key, value):
+        self.__chech(key)
+        setattr(self, self._attrs[key], value)
+
+
+    def __iter__(self):
+        self._iter_index = -1
+        return self
+    
+    def __next__(self):
+        if self._iter_index < self._len_attrs - 1:
+            self._iter_index += 1
+            return getattr(self, self._attrs[self._iter_index])
+        raise StopIteration
+        

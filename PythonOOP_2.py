@@ -1422,3 +1422,184 @@ class IterColumn:
     def __iter__(self):
         for x in range(len(self._lst)):
             yield self._lst[x][self._column]
+
+
+"""
+Подвиг 9. В программе необходимо реализовать таблицу TableValues по следующей схеме:
+
+
+
+Каждая ячейка таблицы должна быть представлена классом Cell. Объекты этого класса создаются командой:
+
+cell = Cell(data)
+где data - данные в ячейке. В каждом объекте класса Cell должен формироваться локальный приватный атрибут __data с соответствующим значением. Для работы с ним в классе Cell должно быть объект-свойство (property):
+
+data - для записи и считывания информации из атрибута __data.
+
+Сам класс TableValues представляет таблицу в целом, объекты которого создаются командой:
+
+table = TableValues(rows, cols, type_data)
+где rows, cols - число строк и столбцов таблицы; type_data - тип данных ячейки (int - по умолчанию, float, list, str и т.п.). Начальные значения в ячейках таблицы равны 0 (целое число).
+
+С объектами класса TableValues должны выполняться следующие команды:
+
+table[row, col] = value# запись нового значения в ячейку с индексами row, col (индексы отсчитываются с нуля)
+value = table[row, col] # считывание значения из ячейки с индексами row, col
+
+for row in table:  # перебор по строкам
+    for value in row: # перебор по столбцам
+        print(value, end=' ')  # вывод значений ячеек в консоль
+    print()
+При попытке записать по индексам table[row, col] данные другого типа (не совпадающего с атрибутом type_data объекта класса TableValues), должно генерироваться исключение командой:
+
+raise TypeError('неверный тип присваиваемых данных')
+При работе с индексами row, col, необходимо проверять их корректность. Если индексы не целое число или они выходят за диапазон размера таблицы, то генерировать исключение командой:
+
+raise IndexError('неверный индекс')
+"""
+#Ячейка таблицы
+class Cell:
+    def __init__(self, data=0):
+        self.__data = data
+
+    @property
+    def data(self):
+        return self.__data
+    
+    @data.setter
+    def data(self, value):
+        self.__data = value
+
+class TableValues:
+    def __init__(self, rows, cols, type_data=int):
+        self.__rows = rows
+        self.__cols = cols
+        self.__type_data = type_data
+        self.__cells = tuple(tuple(Cell() for _ in range(cols)) for _ in range(rows))
+
+
+    def __chect_index(self, index):
+        r, c = index
+        if not (0 <= r < self.__rows) or not (0 <= c < self.__cols):
+            raise IndexError('неверный индекс')
+
+    def __getitem__(self, item):
+        self.__chect_index(item)
+        r, c = item
+        return self.__cells[r][c].data
+
+    def __setitem__(self, key, value):
+        self.__chect_index(key)
+        if type (value) != self.__type_data:
+            raise TypeError('неверный тип присваиваемых данных')
+        r, c = key
+        self.__cells[r][c].data = value
+
+    def __iter__(self):
+        for row in self.__cells:
+            yield (x.data for x in row)
+
+"""
+Объявите класс Matrix (матрица) для операций с матрицами. Объекты этого класса должны создаваться командой:
+
+m1 = Matrix(rows, cols, fill_value)
+где rows, cols - число строк и столбцов матрицы; fill_value - заполняемое начальное значение элементов матрицы (должно быть число: целое или вещественное). Если в качестве аргументов передаются не числа, то генерировать исключение:
+
+raise TypeError('аргументы rows, cols - целые числа; fill_value - произвольное число')
+Также объекты можно создавать командой:
+
+m2 = Matrix(list2D)
+где list2D - двумерный список (прямоугольный), состоящий из чисел (целых или вещественных). Если список list2D не прямоугольный, или хотя бы один из его элементов не число, то генерировать исключение командой:
+
+raise TypeError('список должен быть прямоугольным, состоящим из чисел')
+Для объектов класса Matrix должны выполняться следующие команды:
+
+matrix = Matrix(4, 5, 0)
+res = matrix[0, 0] # возвращается первый элемент матрицы
+matrix[indx1, indx2] = value # элементу матрицы с индексами (indx1, indx2) присваивается новое значение
+Если в результате присвоения тип данных не соответствует числу, то генерировать исключение командой:
+
+raise TypeError('значения матрицы должны быть числами')
+Если указываются недопустимые индексы матрицы (должны быть целыми числами от 0 и до размеров матрицы), то генерировать исключение:
+
+raise IndexError('недопустимые значения индексов')
+Также с объектами класса Matrix должны выполняться операторы:
+
+matrix = m1 + m2 # сложение соответствующих значений элементов матриц m1 и m2
+matrix = m1 + 10 # прибавление числа ко всем элементам матрицы m1
+matrix = m1 - m2 # вычитание соответствующих значений элементов матриц m1 и m2
+matrix = m1 - 10 # вычитание числа из всех элементов матрицы m1
+Во всех этих операция должна формироваться новая матрица с соответствующими значениями. Если размеры матриц не совпадают (разные хотя бы по одной оси), то генерировать исключение командой:
+
+raise ValueError('операции возможны только с матрицами равных размеров')
+Пример для понимания использования индексов (эти строчки в программе писать не нужно):
+
+mt = Matrix([[1, 2], [3, 4]])
+res = mt[0, 0] # 1
+res = mt[0, 1] # 2
+res = mt[1, 0] # 3
+res = mt[1, 1] # 4
+P.S. В программе нужно объявить только класс. Выводить на экран ничего не нужно.
+"""
+from operator import add, sub
+
+class Matrix:
+    def __init__(self, *args):
+        if len(args) == 3:
+            if not all(map(isinstance, args, [int, int, (int, float)])):
+                raise TypeError('аргументы rows, cols - целые числа; fill_value - произвольное число')
+            self.rows, self.cols, fill_value = args
+            self.table = [[fill_value] * self.cols for _ in range(self.rows)]
+        elif len(args) == 1:
+            lst, = args
+            self.rows = len(lst)
+            self.cols = len(lst[0])
+            check_length = lambda x: len(x) == self.cols
+            if all(map(check_length, lst)) and all(isinstance(x, (int, float)) for row in lst for x in row):
+                self.table = lst
+            else:
+                raise TypeError('список должен быть прямоугольным, состоящим из чисел')
+
+    def check_indx(self, i, j):
+        if not (0 <= i < self.rows and 0 <= j < self.cols):
+            raise IndexError('недопустимые значения индексов')
+
+    def check_equal(self, other):
+        if not (self.rows == other.rows and self.cols == other.cols):
+            raise ValueError('операции возможны только с матрицами равных размеров')
+
+    def __getitem__(self, item):
+        i, j = item
+        self.check_indx(i, j)
+        return self.table[i][j]
+
+    def __setitem__(self, key, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError('значения матрицы должны быть числами')
+        i, j = key
+        self.check_indx(i, j)
+        self.table[i][j] = value
+
+    def __iter__(self):
+        return (col for row in self.table for col in row)
+
+    def calculate(self, op, it2):
+        temp = Matrix(self.rows, self.cols, 0)
+        it1 = iter(self)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                temp.table[i][j] = op(next(it1), next(it2))
+        return temp
+
+    def operation(self, op, other):
+        if isinstance(other, Matrix):
+            self.check_equal(other)
+            return self.calculate(op, iter(other))
+        elif isinstance(other, (float, int)):
+            return self.calculate(op, iter([other] * self.rows * self.cols))
+
+    def __add__(self, other):
+        return self.operation(add, other)
+
+    def __sub__(self, other):
+        return self.operation(sub, other)

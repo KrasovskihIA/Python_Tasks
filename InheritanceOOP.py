@@ -107,3 +107,44 @@ table = Table("Круглый", 1024, 812.55, (700, 750, 700))
 book = ElBook("Python ООП", 2000, 2048, 'pdf')
 print(*table.get_data())
 print(*book.get_data())
+
+"""
+Подвиг 6. Еще один пример, когда в базовом классе прописывается необходимый начальный функционал для дочерних классов.
+Известно, что браузер (и не только) может отправлять на сервер различные типы запросов: GET, POST, PUT, DELETE и др. Каждый из этих типов запросов обрабатывается в программе на сервере своим отдельным методом. Чтобы каждый раз не прописывать все необходимые методы в классах при обработке входящих запросов, они выносятся в базовый класс и вызываются из дочерних.
+"""
+
+class GenericView:
+    def __init__(self, methods=('GET',)):
+        self.methods = methods
+
+    def get(self, request):
+        return ""
+
+    def post(self, request):
+        pass
+
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass
+
+class DetailView(GenericView):
+    def __init__(self, methods=('GET', )):
+        super().__init__(methods)
+
+    def get(self, request):
+        if type(request) != dict:
+            raise TypeError('request не является словарем')
+        if  'url' not in request:
+            raise TypeError('request не содержит обязательного ключа url')
+
+        return f"url: {request['url']}"
+
+    def render_request(self, request, method):
+        if method.upper() not in self.methods:
+            raise TypeError('данный запрос не может быть выполнен')
+
+        f = getattr(self, method.lower(), False)
+        if f :
+            return f(request)

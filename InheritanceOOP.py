@@ -325,3 +325,35 @@ class VectorInt(Vector):
         super().__init__(*args)
         if not all(type(i) is int for i in args):
             raise ValueError('координаты должны быть целыми числами')
+
+
+"""
+Подвиг 3. Создается проект, в котором предполагается использовать списки из целых чисел. Для этого вам ставится задача создать класс с именем ListInteger с базовым классом list и переопределить три метода:
+
+__init__()
+__setitem__()
+append()
+
+так, чтобы список ListInteger содержал только целые числа. При попытке присвоить любой другой тип данных, генерировать исключение командой:
+
+raise TypeError('можно передавать только целочисленные значения')
+"""
+class ListInteger(list):
+    def __init__(self, li):
+        for x in li:
+            self.__check_num(x)
+        super().__init__(li)
+
+    def __setitem__(self, key, value):
+        self.__check_num(value)
+        super().__setitem__(key, value)
+
+    def append(self, value):
+        self.__check_num(value)
+        super().append(value)
+
+
+    @staticmethod
+    def __check_num(num):
+        if type(num) != int:
+            raise TypeError('можно передавать только целочисленные значения')

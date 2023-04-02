@@ -866,3 +866,37 @@ class SoftList(list):
             return super().__getitem__(item)
         except IndexError:
             return False
+
+"""
+Объявите класс StringDigit, который наследуется от стандартного класса str. Объекты класса StringDigit должны создаваться командой:
+
+sd = StringDigit(string)
+где string - строка из цифр (например, "12455752345950"). Если в строке string окажется хотя бы один не цифровой символ, то генерировать исключение командой:
+
+raise ValueError("в строке должны быть только цифры")
+Также в классе StringDigit нужно переопределить оператор + (конкатенации строк) так, чтобы операции:
+
+sd = sd + "123"
+sd = "123" + sd
+создавали новые объекты класса StringDigit (а не класса str). Если же при соединении строк появляется не цифровой символ, то генерировать исключение:
+
+raise ValueError("в строке должны быть только цифры")
+"""
+class StringDigit(str):
+    def __init__(self, string):
+        self.string = string 
+
+    def __setattr__(self, key, value):
+        if not value.isdigit():
+            raise ValueError("в строке должны быть только цифры")
+        super().__setattr__(key, value)
+
+    def __add__(self, value):
+        if not value.isdigit():
+            raise ValueError("в строке должны быть только цифры")
+        return StringDigit(self.string + value)
+
+    def __radd__(self, value):
+        if not value.isdigit():
+            raise ValueError("в строке должны быть только цифры")
+        return StringDigit(value + self.string )

@@ -1379,3 +1379,30 @@ class ShopItem(ShopInterface):
 
     def get_id(self):
         return self.__id
+
+"""
+
+"""
+class Validator:
+    def __call__(self, data):
+        if not self._is_valid(data):
+            raise ValueError('данные не прошли валидацию')
+        return self._is_valid(data)
+      
+    def _is_valid(self, data):
+        raise NotImplementedError('в классе не переопределен метод _is_valid')
+
+   
+class FloatValidator(Validator):  # для проверки, что data - вещественное число в заданном диапазоне
+    def __init__(self, min_value, max_value):
+        self.min_value = min_value
+        self.max_value = max_value
+
+    def __call__(self, value):
+        return self._is_valid(value)
+            
+    def _is_valid(self, data):    
+        return isinstance(data, float) and self.min_value <= data <= self.max_value
+
+
+    

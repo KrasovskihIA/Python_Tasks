@@ -1811,3 +1811,41 @@ digits = [PrimeNumber(1), PrimeNumber(2), PrimeNumber(3),
 
 lst_positive = list(filter(lambda x: isinstance(x, Positive), digits))
 lst_float = list(filter(lambda x: isinstance(x, Float), digits)) 
+
+
+"""
+ShopGenericView - для отображения всех локальных атрибутов объектов любых дочерних классов (не только Book);
+ShopUserView - для отображения всех локальных атрибутов, кроме атрибута _id, объектов любых дочерних классов (не только Book).
+
+То есть, в этих классах нужно переопределить два магических метода: __str__() и __repr__().
+"""
+class ShopItem:
+    ID_SHOP_ITEM = 0
+
+    def __init__(self):
+        super().__init__()
+        ShopItem.ID_SHOP_ITEM += 1
+        self._id = ShopItem.ID_SHOP_ITEM
+
+    def get_pk(self):
+        return self._id
+
+
+
+class ShopGenericView:
+    Exclude = tuple()
+    def __str__(self):
+        return '\n'.join('{0}: {1}'.format(attr, v) for attr, v in self.__dict__.items() if attr not in self.Exclude)
+
+    def __repr__(self):
+        return self.__str__()
+
+class ShopUserView(ShopGenericView):
+    Exclude = ('_id', )
+
+class Book(ShopItem):
+    def __init__(self, title, author, year):
+        super().__init__()
+        self._title = title
+        self._author = author
+        self._year = year

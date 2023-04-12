@@ -1942,7 +1942,6 @@ _fio - ФИО сотрудника (строка);
 _old - возраст сотрудника (целое положительное число);
 _job - занимаемая должность (строка).
 
-
 """
 class Person:
     __slots__ = ('_fio', '_old', '_job')
@@ -1957,3 +1956,47 @@ persons = [Person('Суворов', 52, 'полководец'),
            Person('Балакирев', 34, 'программист и преподаватель'),
            Person('Пушкин', 32, 'поэт и писатель')
            ]
+
+"""
+Объявите класс Planet (планета), объекты которого создаются командой:
+
+p = Planet(name, diametr, period_solar, period)
+где name - наименование планеты; diametr - диаметр планеты (любое положительное число); period_solar - период (время) обращения планеты вокруг Солнца (любое положительное число); period - период обращения планеты вокруг своей оси (любое положительное число).
+
+В каждом объекте класса Planet должны формироваться локальные атрибуты с именами: _name, _diametr, _period_solar, _period и соответствующими значениями.
+Затем, объявите класс с именем SolarSystem (солнечная система). В объектах этого класса должны быть допустимы, следующие локальные атрибуты (ограничение задается через коллекцию __slots__):
+бъект класса SolarSystem должен создаваться командой:
+
+s_system = SolarSystem()
+и быть только один (одновременно в программе два и более объектов класса SolarSystem недопустимо). Используйте для этого паттерн Singleton.
+
+В момент создания объекта SolarSystem должны автоматически создаваться перечисленные локальные атрибуты и ссылаться на соответствующие объекты класса Planet
+"""
+class Planet:
+    def __init__(self, name, diametr, period_solar, period):
+        self._name = name
+        self._diametr = diametr
+        self._period_solar = period_solar
+        self._period = period
+
+class SolarSystem:
+    __instance = None
+    __slots__ = ('_mercury', '_venus', '_earth', '_mars', '_jupiter', '_saturn', '_uranus', '_neptune')
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        
+        return cls.__instance
+
+    def __init__(self):
+        self._mercury = Planet('Меркурий', 4878, 87.97, 1407.5)
+        self._venus = Planet('Венера', 12104, 224.7, 5832.45)
+        self._earth = Planet('Земля', 12756, 365.3, 23.93)
+        self._mars = Planet('Марс', 6794, 687, 24.62)
+        self._jupiter = Planet('Юпитер', 142800, 4330, 9.9)
+        self._saturn = Planet('Сатурн', 120660, 10753, 10.63)
+        self._uranus = Planet('Уран', 51118, 30665, 17.2)
+        self._neptune = Planet('Нептун', 49528, 60150, 16.1)
+
+s_system = SolarSystem()

@@ -1933,3 +1933,27 @@ class MoneyR(Money, MoneyOperators):
 class MoneyD(Money, MoneyOperators):
     def __str__(self):
         return f"MoneyD: {self.money}"
+
+
+"""
+Подвиг 4. Объявите класс Person, в объектах которого разрешены только локальные атрибуты с именами (ограничение задается через коллекцию __slots__):
+
+_fio - ФИО сотрудника (строка);
+_old - возраст сотрудника (целое положительное число);
+_job - занимаемая должность (строка).
+
+
+"""
+class Person:
+    __slots__ = ('_fio', '_old', '_job')
+
+    def __init__(self, fio, old, job):
+        self._fio = fio
+        self._old = old
+        self._job = job
+
+persons = [Person('Суворов', 52, 'полководец'),
+           Person('Рахманинов', 50, 'пианист, композитор'),
+           Person('Балакирев', 34, 'программист и преподаватель'),
+           Person('Пушкин', 32, 'поэт и писатель')
+           ]

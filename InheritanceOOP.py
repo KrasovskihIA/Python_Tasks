@@ -2128,7 +2128,15 @@ notes = Notes()
 
 
 """
+В программе объявлен базовый класс Function (функция) следующим образом:
+бъявите дочерний класс с именем Linear (линейная функция y = k*x + b), объекты которого должны создаваться командами:
 
+obj = Linear(k, b)
+linear = Linear(obj)  # этот вариант используется в базовом классе в методе __add__()
+В первом случае происходит создание объекта линейной функции с параметрами k и b. Во втором - создание объекта со значениями параметров k и b, взятыми из объекта obj.
+
+В каждом объекте класса Linear должны создаваться локальные атрибуты с именами _k и _b с соответствующими значениями.
+В результате будет создан универсальный базовый класс Function для работы с произвольными функциями от одного аргумента.
 """
 class Function:
     def __init__(self):
@@ -2151,11 +2159,21 @@ class Function:
 
     def __mul__(self, other):
         if type(other) not in (int, float):
-            raise TypeError('смещение должно быть числом')
+            raise TypeError('амплитуда должно быть числом')
 
         obj = self.__class__(self)
-        obj._bias = self._bias * other
+        obj._amplitude *= other
         return obj
 
 
-# здесь объявляйте класс Linear
+class Linear(Function):
+    def __init__(self, k=None, b=None):
+        super().__init__()
+        if type(k)==Linear:
+            self._k, self._b = k._k, k._b
+        else:
+            self._k = k
+            self._b = b
+    
+    def _get_function(self, x):
+        return self._k * x + self._b

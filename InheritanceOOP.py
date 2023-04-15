@@ -2179,5 +2179,56 @@ class Linear(Function):
         return self._k * x + self._b
 
 """
+Далее, вам нужно обратиться к атрибуту z объекта pt и, если такой атрибут существует, то вывести его значение на экран. Иначе вывести строку (без кавычек):
+
+"Атрибут с именем z не существует"
+
+Реализовать проверку следует с помощью блоков try/except.
+
+Подсказка: при обращении к несуществующему атрибуту генерируется исключение AttributeError.
+"""
+class Point:
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+        
+
+pt = Point(1, 2)
+
+try:
+    print(pt.z)
+except AttributeError:
+    print("Атрибут с именем z не существует")
+
 
 """
+Ваша задача посчитать сумму всех целочисленных значений, присутствующих в списке lst_in. Результат (сумму) вывести на экран.
+"""
+lst_in = input().split()
+resul = []
+for x in lst_in:
+    try:
+        int(x)
+        resul.append(int(x))
+    except:
+        pass
+
+print(sum(resul))
+
+"""
+Ваша задача сформировать новый список с именем lst_out, в котором строки с целыми числами будут представлены как целые числа (тип int), строки с вещественными числами, как вещественные (тип float), а остальные данные - без изменений.
+"""
+lst_in = input().split()
+lst_out = []
+for x in lst_in:
+    try:
+        int(x)
+        lst_out.append(int(x))
+    except:
+        try:
+           float(x)
+           lst_out.append(float(x))
+        except:
+            lst_out.append(x)
+
+    

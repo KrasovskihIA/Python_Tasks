@@ -2779,3 +2779,109 @@ except DateError:
 """
 
 """
+class CellException(BaseException):
+    pass
+
+class CellIntegerException(CellException):
+    pass
+
+class CellFloatException(CellException):
+    pass
+
+class CellStringException(CellException):
+    pass
+
+# здесь объявляйте классы CellInteger, CellFloat, CellString
+
+class Cell:
+    def __init__(self, min=0, max=100):
+        self.min = min
+        self.max = max
+        self._value = None
+        self.quota_error = CellException
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if self.check(value):
+            self._value = value
+        else:
+            raise self.quota_error
+
+    def check(self, value):
+        return bool(value)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}:{self.value}"
+
+
+class CellInteger(Cell):
+    def check(self, value):
+        self.quota_error = CellIntegerException('значение выходит за допустимый диапазон')
+        if not isinstance(value, int) or not (self.min <= value <= self.max):
+            return False
+        return True
+
+
+class CellFloat(Cell):
+    def check(self, value):
+        self.quota_error = CellFloatException('значение выходит за допустимый диапазон')
+        if not isinstance(value, float) or not (self.min <= value <= self.max):
+            return False
+        return True
+
+
+class CellString(Cell):
+    def check(self, value):
+        self.quota_error = CellStringException('длина строки выходит за допустимый диапазон')
+        if not isinstance(value, str) or not (self.min <= len(value) <= self.max):
+            return False
+        return True
+
+
+# здесь объявляйте класс TupleData
+
+class TupleData(list):
+    def __init__(self, *args):
+        super().__init__()
+        self.__iadd__(list(args))
+
+    def get_lst(self):
+        return list(super().__iter__())
+
+    def __getitem__(self, item):
+        return super().__getitem__(item).value
+
+    def __setitem__(self, key, value):
+        obj = super().__getitem__(key)
+        obj.value = value
+
+    def __iter__(self):
+        for cell in super().__iter__():
+            yield cell.value
+
+    def __repr__(self):
+        return f"{[str(x) for x in super().__iter__()]}"
+
+    
+# эти строчки в программе не менять!
+ld = TupleData(CellInteger(0, 10), CellInteger(11, 20), CellFloat(-10, 10), CellString(1, 100))
+
+try:
+    ld[0] = 1
+    ld[1] = 20
+    ld[2] = -5.6
+    ld[3] = "Python ООП"
+except CellIntegerException as e:
+    print(e)
+except CellFloatException as e:
+    print(e)
+except CellStringException as e:
+    print(e)
+except CellException:
+    print("Ошибка при обращении к ячейке")
+except Exception:
+    print("Общая ошибка при работе с объектом TupleData")
